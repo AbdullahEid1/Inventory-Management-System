@@ -1,0 +1,39 @@
+﻿@model Inventory.Models.Supplier
+
+@{
+    ViewBag.Title = "Products for @Model.SupplierName";
+}
+
+<h2>Products for @Model.SupplierName</h2>
+
+@if (Model.Products != null && Model.Products.Any())
+{
+    <table class="table table-striped table-hover table-bordered mt-3">
+        <thead>
+            <tr>
+                
+                <th>Product Name</th>
+                <th>Stock Quantity</th>
+                <th>Price (EGP)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model.Products)
+            {
+                <tr>
+                     
+                    <td>@product.ProductName</td>
+                    <td>@product.StockQuantity</td>
+                    <td>@product.Price</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <a asp-action="Index" class="btn btn-secondary mb-2">Back to Suppliers</a>
+    <button onclick="window.print()">Print Products</button>
+}
+else
+{
+    <p>No products available for this supplier.</p>
+}

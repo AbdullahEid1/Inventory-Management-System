@@ -1,0 +1,183 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Inventory.Models;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Inventory.Data;
+
+namespace Inventory.Controllers
+{
+    public class SupplierController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+
+        public SupplierController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        // GET: Supplier
+        public async Task<IActionResult> Index(string searchString)
+        {
+            // Retrieve suppliers and apply search if necessary
+            var suppliers = string.IsNullOrEmpty(searchString)
+                ? await _context.Supplier.ToListAsync()
+                : await _context.Supplier
+                    .Where(s => s.SupplierName.StartsWith(searchString))
+                    .ToListAsync();
+
+            ViewData["SearchString"] = searchString;
+
+            return View(suppliers);
+        }
+
+
+        // GET: Supplier/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Supplier/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Supplier supplier)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(supplier);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(supplier);
+        }
+
+        
+        // GET: Supplier/Edit/5    
+        public async Task<IActionResult> Edit(int? id)
+        {
+            // Check if the supplier ID is null
+            if (id == null)
+            {
+                return NotFound("Supplier ID is missing.");
+            }
+
+            // Retrieve the supplier from the database
+            var supplier = await _context.Supplier.FindAsync(id);
+
+            // Check if the supplier exists
+            if (supplier == null)
+            {
+                return NotFound("Supplier not found.");
+            }
+
+            return View(supplier);
+        }
+
+        // POST: Supplier/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, Supplier supplier)
+        {
+            // Ensure the posted ID matches the supplier ID
+            if (id != supplier.SupplierID)
+            {
+                return BadRequest("The submitted Supplier ID does not match the original.");
+            }
+
+            // Validate the model state
+            if (!ModelState.IsValid)
+            {
+                return View(supplier);
+            }
+
+            try
+            {
+                // Attempt to update the supplier in the database
+                _context.Update(supplier);
+                await _context.SaveChangesAsync();
+
+                // Success message and redirection
+                TempData["SuccessMessage"] = "Supplier details updated successfully!";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                // Handle concurrency exception (if two users are updating the same record)
+                if (!SupplierExists(supplier.SupplierID))
+                {
+                    return NotFound("Supplier no longer exists.");
+                }
+                else
+                {
+                    // Log the error if necessary and rethrow it
+                    throw;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle any unexpected errors
+                ModelState.AddModelError("", "An error occurred while updating the supplier. Please try again.");
+                // Optionally log the error
+                // _logger.LogError(ex, "Error while updating supplier {SupplierID}", supplier.SupplierID);
+                return View(supplier);
+            }
+        }
+
+
+        // GET: Supplier/Delete/5
+        public async Task<IActionResult> Delete(int id)
+        {
+            var supplier = await _context.Supplier
+                .FirstOrDefaultAsync(m => m.SupplierID == id);
+            if (supplier == null)
+            {
+                return NotFound();
+            }
+
+            return View(supplier);
+        }
+
+        // POST: Supplier/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var supplier = await _context.Supplier.FindAsync(id);
+            if (supplier != null)
+            {
+                _context.Supplier.Remove(supplier);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        // Check if supplier exists
+        private bool SupplierExists(int id)
+        {
+            return _context.Supplier.Any(e => e.SupplierID == id);
+        }
+
+
+        // GET: Supplier/PrintProducts/5
+        public async Task<IActionResult> PrintProducts(int id)
+        {
+            // Retrieve the supplier with their associated products
+
+
+            var supplier = await _context.Supplier
+                .Include(s => s.Products)
+                .FirstOrDefaultAsync(s => s.SupplierID == id);
+
+
+            if (supplier == null)
+            {
+                return NotFound("Supplier not found.");
+            }
+
+            return View(supplier);
+        }
+
+    }
+}

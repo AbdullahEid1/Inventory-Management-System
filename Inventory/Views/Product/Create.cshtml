@@ -1,0 +1,75 @@
+﻿@model Inventory.Models.Product
+
+@{
+    ViewData["Title"] = "Create Product";
+}
+
+<h2>Create New Product</h2>
+
+<form asp-action="Create" method="post" class="form-horizontal mt-3">
+    <div class="form-group">
+        <label asp-for="ProductName" class="control-label"></label>
+        <input asp-for="ProductName" class="form-control" />
+        <span asp-validation-for="ProductName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CategoryID" class="control-label">Category</label>
+        <select asp-for="CategoryID" class="form-control">
+            <option value="">-- Select Category --</option>
+            @if (ViewBag.Categories != null)
+            {
+                @foreach (var category in ViewBag.Categories)
+                {
+                    <option value="@category.CategoryID">@category.CategoryName</option>
+                }
+            }
+        </select>
+        <span asp-validation-for="CategoryID" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SupplierID" class="control-label">Supplier</label>
+        <select asp-for="SupplierID" class="form-control">
+            <option value="">-- Select Supplier --</option>
+            @if (ViewBag.Suppliers != null)
+            {
+                foreach (var supplier in ViewBag.Suppliers)
+                {
+                    <option value="@supplier.SupplierID">@supplier.SupplierName</option>
+                }
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Price" class="control-label"></label>
+        <input asp-for="Price" class="form-control" type="number" step="0.01" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="StockQuantity" class="control-label"></label>
+        <input asp-for="StockQuantity" class="form-control" type="number" />
+        <span asp-validation-for="StockQuantity" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="LowStockThreshold" class="control-label"></label>
+        <input asp-for="LowStockThreshold" class="form-control" type="number" />
+        <span asp-validation-for="LowStockThreshold" class="text-danger"></span>
+    </div>
+
+    @* <div class="form-group form-check">
+        <input asp-for="IsAvailable" type="checkbox" class="form-check-input" />
+        <label asp-for="IsAvailable" class="form-check-label">Is Available</label>
+    </div> *@
+
+    <button type="submit" class="mb-2 btn btn-outline-success mt-3">Create</button>
+    <a class="mb-2 btn btn-outline-danger mt-3" asp-action="Index">Cancel</a>
+</form>
+
+@section Scripts {
+    @* This ensures that validation scripts are included *@
+    <partial name="_ValidationScriptsPartial" />
+}

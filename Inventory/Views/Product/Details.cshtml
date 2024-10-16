@@ -1,0 +1,28 @@
+﻿@model Inventory.Models.Product
+
+@{
+    ViewData["Title"] = "Product Details";
+}
+
+@if (Model == null)
+{
+    <div class="alert alert-danger">Product details not found.</div>
+}
+else
+{
+    <h2>Product Details</h2>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            <h5 class="card-title">@Model.ProductName</h5>
+            <p><strong>Category:</strong> @(Model.Category?.CategoryName ?? "N/A")</p>
+            <p><strong>Supplier:</strong> @(Model.Supplier?.SupplierName ?? "N/A")</p>
+            <p><strong>Price:</strong> @Model.Price (EGP)</p>
+            <p><strong>Stock Quantity:</strong> @Model.StockQuantity</p>
+            <p><strong>Low Stock Threshold:</strong> @Model.LowStockThreshold</p>
+            <p><strong>Is Available:</strong> @(Model.StockQuantity > 0 ? "Yes" : "No")</p>
+            <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.ProductID">Edit</a>
+            <a class="btn btn-secondary" asp-action="Index">Back to Products</a>
+        </div>
+    </div>
+}

@@ -1,0 +1,79 @@
+﻿@model Inventory.Models.Product
+
+@{
+    ViewData["Title"] = "Edit Product";
+}
+
+@if (Model == null)
+{
+    <div class="alert alert-danger">Product not found for editing.</div>
+}
+else
+{
+    <h2>Edit Product</h2>
+
+    <form asp-action="Edit" method="post">
+        @* Hidden field to bind the ProductID *@
+        <input type="hidden" asp-for="ProductID" />
+
+        <div class="form-group">
+            <label asp-for="ProductName" class="control-label">Product Name</label>
+            <input asp-for="ProductName" class="form-control" />
+            <span asp-validation-for="ProductName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Price" class="control-label">Price</label>
+            <input asp-for="Price" class="form-control" type="number" step="0.01" />
+
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="StockQuantity" class="control-label">Stock Quantity</label>
+            <input asp-for="StockQuantity" class="form-control" type="number" />
+            <span asp-validation-for="StockQuantity" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="CategoryID" class="control-label">Category</label>
+
+            <select asp-for="CategoryID" class="form-control" asp-items="@(new SelectList(ViewBag.Categories, "CategoryID", "CategoryName", Model.CategoryID))">
+                <option value="">-- Select Category --</option>
+            </select>
+
+            <span asp-validation-for="CategoryID" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="SupplierID" class="control-label">Supplier</label>
+
+            <select asp-for="SupplierID" class="form-control" asp-items="@(new SelectList(ViewBag.Suppliers, "SupplierID", "SupplierName", Model.SupplierID))">
+                <option value="">-- Select Supplier --</option>
+            </select>
+
+            <span asp-validation-for="SupplierID" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="LowStockThreshold" class="control-label"></label>
+            <input asp-for="LowStockThreshold" class="form-control" />
+            <span asp-validation-for="LowStockThreshold" class="text-danger"></span>
+        </div>
+
+        @* <div class="form-group form-check">
+            <input asp-for="IsAvailable" type="checkbox" class="form-check-input" />
+            <label asp-for="IsAvailable" class="form-check-label">Is Available</label>
+        </div> *@
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+            <a asp-action="Index" class="btn btn-secondary mt-3">Cancel</a>
+        </div>
+    </form>
+}
+
+@section Scripts {
+    @* This ensures that validation scripts are included *@
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,61 @@
+﻿@model IEnumerable<Inventory.Models.Category>
+
+@{
+    ViewData["Title"] = "Categories";
+}
+
+<h2>Categories</h2>
+
+<form asp-action="Search" method="get" class="form-inline mb-3">
+    <input type="text" name="keyword" class="form-control mr-2" placeholder="Search Categories" />
+    <button type="submit" class="btn btn-outline-danger mt-3">Search</button>
+</form>
+
+<p>
+    <a asp-action="Create" class="btn btn-outline-success mb-3">Add New Category</a>
+</p>
+
+<!-- Check if there are Categories -->
+@if (!Model.Any())
+{
+    <div class="alert alert-dismissible alert-danger text-center">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <h4 class="alert-heading">
+            No Categories Available   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.964 0L.165 13.233c-.457.778.091 1.767.982 1.767h13.706c.89 0 1.439-.99.982-1.767L8.982 1.566zm-.982 4.905a.905.905 0 1 1 1.81 0l-.082 3.206a.823.823 0 0 1-1.646 0L8 6.471zm.002 5.48a1.13 1.13 0 1 1-2.262 0 1.13 1.13 0 0 1 2.262 0z" />
+            </svg>
+
+
+        </h4>
+        <p class="mb-0">
+            <a href="#" class="alert-link">
+            </a>
+        </p>
+    </div>
+}
+else
+{
+    <table class="table table-striped table-hover table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>Category Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var category in Model)
+            {
+                <tr>
+                    <td>@category.CategoryName</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@category.CategoryID" class="btn btn-sm btn-warning">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@category.CategoryID" class="btn btn-sm btn-danger">Delete</a>
+                        <a class="btn btn-danger btn-sm" asp-action="PrintProducts" asp-route-id="@category.CategoryID">
+                            <i class="fas fa-trash-alt"></i> Show Products
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
