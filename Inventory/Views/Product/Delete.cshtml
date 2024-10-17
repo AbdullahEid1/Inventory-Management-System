@@ -6,7 +6,7 @@
 
 @if (Model == null)
 {
-    <div class="alert alert-danger">Product not found.</div>
+    <div class="alert alert-info">Product not found.</div>
 }
 else
 {
@@ -31,7 +31,7 @@ else
         <input type="hidden" asp-for="ProductID" /> <!-- Hidden field for ProductID -->
         <div class="mt-3 mb-3">
             <button type="submit" class="btn btn-outline-danger">Delete</button>
-            <a asp-action="Index" class="btn btn-outline-success">Cancel</a>
+            <a asp-action="Index" class="btn btn-outline-primary">Cancel</a>
         </div>
     </form>
 }

@@ -6,7 +6,7 @@
 
 @if (Model == null)
 {
-    <div class="alert alert-danger">Product details not found.</div>
+    <div class="alert alert-info">Product details not found.</div>
 }
 else
 {
@@ -26,7 +26,7 @@ else
                 
             <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@Model.ProductID">Edit</a>
             }
-            <a class="btn btn-outline-danger" asp-action="Index">Back to Products</a>
+            <a class="btn btn-outline-primary" asp-action="Index">Back to Products</a>
         </div>
     </div>
 }
