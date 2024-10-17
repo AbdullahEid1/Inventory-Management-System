@@ -30,12 +30,11 @@
         </tbody>
     </table>
 
-    <a asp-action="Index" class="btn btn-secondary mb-2">Back to Categories</a>
-    <button onclick="window.print()">Print Products</button>
+    <button onclick="window.print()" class="btn btn-outline-success mb-3">Print Products</button>
+    <a asp-action="Index" class="btn btn-outline-primary mb-2">Back to Categories</a>
 }
 else
 {
-    <p>No products available for this Category.</p>
     <div class="alert alert-info text-center">
         No products available for this category.
     </div>
