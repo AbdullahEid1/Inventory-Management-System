@@ -4,7 +4,10 @@
     ViewData["Title"] = "Categories";
 }
 
-<h2>Categories</h2>
+<div class="card-header bg-white">
+    <h5 class="mb-0">All Categories</h5>
+</div>
+
 
 <form asp-action="Search" method="get" class="form-inline mb-3">
     <input type="text" name="keyword" class="form-control mr-2" placeholder="Search Categories" />
@@ -45,8 +48,13 @@ else
                             <button class="btn btn-outline-danger btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                 Actions
                             </button>
+
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                
+                                <li>
+                                    <a class="dropdown-item" asp-action="PrintProducts" asp-route-id="@category.CategoryID">
+                                        <i class="fas fa-edit"></i> Show Products
+                                    </a>
+                                </li>
                               @if(User.IsInRole("Admin"))
                                 {
                                     <li>
@@ -60,14 +68,7 @@ else
                                         </a>
                                     </li>
                                 }
-                                else
-                                {
-                                    <li>
-                                        <a class="dropdown-item" >
-                                            <i class="fas fa-info-circle"></i> Nothing To Do
-                                        </a>
-                                    </li>
-                                }
+                               
                             </ul>
                         </div>
                     </td>
