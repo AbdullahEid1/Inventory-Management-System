@@ -1,0 +1,16 @@
+﻿@model Product
+
+@if (Model != null)
+{
+    <div class="alert alert-success">
+        <strong>Product Found!</strong> Product @Model.ProductName - @Model.Category.CategoryName found in the inventory.
+    </div>
+    <div class="input-group mt-3">
+        <label for="Quantity" class="input-group-text">Quantity</label>
+        <input id="quantityInput" name="Quantity" type="number" value="1" class="form-control" aria-label="Quantity" min="1" />
+
+        <button onclick="exportProduct(@Model.ProductID,quantityInput)" class="px-2 btn btn-outline-success btn-sm my-2">
+            <i class="fas fa-download"></i> Export
+        </button>
+    </div>
+}

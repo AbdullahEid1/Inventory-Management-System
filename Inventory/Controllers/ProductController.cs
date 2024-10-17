@@ -271,5 +271,36 @@ namespace Inventory.Controllers
             }
             return RedirectToAction("Index", "Home");
         }
+        [HttpPost]
+        public IActionResult GetProduct(int id)
+        {
+            var product = _context.Product.Include(p => p.Category).FirstOrDefault(p => p.ProductID == id);
+
+            if (product != null)
+            {
+                return PartialView("_ProductDetailsPartial", product);
+            }
+            else
+            {
+                return Json(new { success = false, message = "Product not found" });
+            }
+        }
+
+        public IActionResult ExportProduct(int id, int quantity)
+        {
+
+            var product = _context.Product.Find(id);
+            if (product != null)
+            {
+                product.StockQuantity -= quantity;
+                _context.SaveChanges();
+                TempData["success"] = $"Product Exported With {quantity}";
+            }
+            else
+            {
+                TempData["fail"] = "Product not found";
+            }
+            return RedirectToAction("Index", "Home");
+            }
     }
 }

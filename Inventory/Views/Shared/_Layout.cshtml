@@ -61,11 +61,9 @@
                 </div>
             }
 
-            <div class="container-fluid">
+            <div class="container-fluid px-5">
                 <a class="navbar-brand text-primary" href="/">Inventory</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+               
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
 
@@ -74,7 +72,6 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">@User.Identity.Name</a>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" asp-action="Profile" asp-controller="Account">My Profile</a>
                                     <a class="dropdown-item" asp-action="SignOut" asp-controller="Account">Signout</a>
 
                                 </div>
@@ -133,7 +130,7 @@
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Admin </a>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" asp-action="Role" asp-controller="Account">Add Role</a>
-                                    <a class="dropdown-item" asp-action="Register" asp-controller="Account"></a>
+                                    <a class="dropdown-item" asp-action="ShowUsers" asp-controller="Home"> ShowAllUsers </a>
 
                                 </div>
                             </li>
