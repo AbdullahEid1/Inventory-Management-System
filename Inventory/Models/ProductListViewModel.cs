@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ECommerce.Model.ViewModels
+namespace Inventory.Models
 {
     public class ProductListViewModel
     {

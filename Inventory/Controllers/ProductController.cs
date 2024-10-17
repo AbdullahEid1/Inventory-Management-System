@@ -1,5 +1,4 @@
-﻿using ECommerce.Model.ViewModels;
-using Inventory.Data;
+﻿using Inventory.Data;
 using Inventory.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
