@@ -88,7 +88,7 @@
                                             </button>
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                 <li>
-                                                    <a class="dropdown-item" asp-action="Details" asp-route-id="@product.ProductID">
+                                                    <a class="dropdown-item" asp-action="Details" asp-controller="Product" asp-route-id="@product.ProductID">
                                                         <i class="fas fa-info-circle"></i> Details
                                                     </a>
                                                 </li>
@@ -96,12 +96,12 @@
                                                 @if (User.IsInRole("Admin"))
                                                 {
                                                     <li>
-                                                        <a class="dropdown-item" asp-action="Edit" asp-route-id="@product.ProductID">
+                                                        <a class="dropdown-item" asp-action="Edit" asp-controller="Product" asp-route-id="@product.ProductID">
                                                             <i class="fas fa-edit"></i> Edit
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <a class="dropdown-item" asp-action="Delete" asp-route-id="@product.ProductID">
+                                                        <a class="dropdown-item" asp-action="Delete" asp-controller="Product" asp-route-id="@product.ProductID">
                                                             <i class="fas fa-trash-alt"></i> Delete
                                                         </a>
                                                     </li>
