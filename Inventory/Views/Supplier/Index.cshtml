@@ -9,7 +9,7 @@
 <!-- Search Form -->
 <form asp-action="Index" method="get" class="form-inline mb-3">
     <input type="text" name="searchString" value="@ViewData["SearchString"]" class="form-control mr-2" placeholder="Search Suppliers" />
-    <button type="submit" class="btn btn-outline-danger mt-3">Search</button>
+    <button type="submit" class="btn btn-outline-info mt-3">Search</button>
 </form>
 
 @if (User.IsInRole("Admin"))
@@ -20,7 +20,7 @@
 
 @if (!Model.Any())
 {
-    <div class="alert alert-danger text-center">
+    <div class="alert alert-info text-center">
         No suppliers available.
     </div>
 }
