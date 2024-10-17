@@ -1,9 +1,9 @@
-﻿using FirstMVC.ViewModel;
-using Inventory.Models;
+﻿using Inventory.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Models;
 using System.Runtime.InteropServices;
 using System.Security.Claims;
 

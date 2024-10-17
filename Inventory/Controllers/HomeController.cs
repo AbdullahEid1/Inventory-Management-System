@@ -1,6 +1,7 @@
 using Inventory.Data;
 using Inventory.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace Inventory.Controllers
@@ -18,7 +19,23 @@ namespace Inventory.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            int products = _context.Product.Count();
+            int categories = _context.Category.Count();
+            int suppliers = _context.Supplier.Count();
+            int users = _context.Users.Count();
+
+            var lowstock = _context.Product.Include(p => p.Supplier).Include(p => p.Category).Where(p => p.StockQuantity < p.LowStockThreshold).ToList();
+
+            HomeViewModel model = new HomeViewModel
+            {
+                TotalProducts = products,
+                TotalUsers = users,
+                TotalCategories = categories,
+                TotalSupplires = suppliers,
+                LowStockProducts = lowstock
+            };
+
+            return View(model);
         }
 
         public IActionResult Privacy()

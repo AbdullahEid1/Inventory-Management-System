@@ -1,200 +1,208 @@
-﻿@using ECommerce.Model.ViewModels
+﻿@using Models
 @model ProductListViewModel
 
 @{
     ViewData["Title"] = "Product";
 }
 
-<h2 class="mb-3">Products List</h2>
-
-<!-- Notification Section -->
-@if (Model.Products.Any(product => product.StockQuantity < product.LowStockThreshold))
-{
-    <div class="alert alert-warning">
-        <strong>Low Stock Alert!</strong> Some products are below their stock threshold. Please review the product list.
+    <div class="card-header bg-white">
+        <h5 class="mb-0">Low Stock Products</h5>
     </div>
-}
+    
 
-<!-- Search Form -->
-<form asp-action="Search" method="get" class="form-inline mb-3">
-    <input type="text" name="keyword" class="form-control mr-2" placeholder="Search Products" />
-    <button type="submit" class="btn btn-outline-danger mt-3">Search</button>
-</form>
+    <div class ="card-body">
 
-<!-- Filter by Category -->
-<form method="get" asp-action="Index" class="form-inline mb-3">
-    <div class="form-group">
-        <label for="categoryFilter">Filter by Category: </label>
-        <select id="categoryFilter" name="categoryId" class="form-control ml-2">
-            <option value="">-- All Categories --</option>
-            @foreach (var category in ViewBag.Categories)
+   
+            <!-- Notification Section -->
+            @if (Model.Products.Any(product => product.StockQuantity < product.LowStockThreshold))
             {
-                <option value="@category.Value">@category.Text</option>
+                <div class="alert alert-warning">
+                    <strong>Low Stock Alert!</strong> Some products are below their stock threshold. Please review the product list.
+                </div>
             }
-        </select>
-    </div>
-    <button type="submit" class="btn btn-outline-danger ml-2 mt-3">Filter</button>
-</form>
 
-<div>
-    <button class="btn btn-outline-success mb-3" onclick="window.print()">Print Products</button>
-    <a class="btn btn-outline-success mb-3" asp-action="Create">
-        <i class="fas fa-plus"></i> Create New Product
-    </a>
-</div>
+            <!-- Search Form -->
+            <form asp-action="Search" method="get" class="form-inline mb-3">
+                <input type="text" name="keyword" class="form-control mr-2" placeholder="Search Products" />
+                <button type="submit" class="btn btn-outline-danger mt-3">Search</button>
+            </form>
+
+            <!-- Filter by Category -->
+            <form method="get" asp-action="Index" class="form-inline mb-3">
+                <div class="form-group">
+                    <label for="categoryFilter">Filter by Category: </label>
+                    <select id="categoryFilter" name="categoryId" class="form-control ml-2">
+                        <option value="">-- All Categories --</option>
+                        @foreach (var category in ViewBag.Categories)
+                        {
+                            <option value="@category.Value">@category.Text</option>
+                        }
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-outline-danger ml-2 mt-3">Filter</button>
+            </form>
+
+            <div>
+                <button class="btn btn-outline-success mb-3" onclick="window.print()">Print Products</button>
+                <a class="btn btn-outline-success mb-3" asp-action="Create">
+                    <i class="fas fa-plus"></i> Create New Product
+                </a>
+            </div>
 
 
-<!-- Check if there are products -->
-@if (!Model.Products.Any())
-{
-    <div class="alert alert-dismissible alert-danger text-center">
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        <h4 class="alert-heading">
-            No Products Available   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
-                <path d="M8.982 1.566a1.13 1.13 0 0 0-1.964 0L.165 13.233c-.457.778.091 1.767.982 1.767h13.706c.89 0 1.439-.99.982-1.767L8.982 1.566zm-.982 4.905a.905.905 0 1 1 1.81 0l-.082 3.206a.823.823 0 0 1-1.646 0L8 6.471zm.002 5.48a1.13 1.13 0 1 1-2.262 0 1.13 1.13 0 0 1 2.262 0z" />
-            </svg>
+            <!-- Check if there are products -->
+            @if (!Model.Products.Any())
+            {
+                <div class="alert alert-dismissible alert-danger text-center">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <h4 class="alert-heading">
+                        No Products Available   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+                            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.964 0L.165 13.233c-.457.778.091 1.767.982 1.767h13.706c.89 0 1.439-.99.982-1.767L8.982 1.566zm-.982 4.905a.905.905 0 1 1 1.81 0l-.082 3.206a.823.823 0 0 1-1.646 0L8 6.471zm.002 5.48a1.13 1.13 0 1 1-2.262 0 1.13 1.13 0 0 1 2.262 0z" />
+                        </svg>
             
 
-        </h4>
-        <p class="mb-0">
-             <a href="#" class="alert-link">
-            </a>
-        </p>
-    </div>
-}
-else
-{
-    <table class="table table-hover mt-3">
-        <thead class="table-success">
-            <tr>
-                <th>Product Name</th>
-                <th>Category</th>
-                <th>Supplier</th>
-                <th>Price (EGP)</th>
-                <th>Stock Quantity</th>
-                <th>Availability</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var product in Model.Products)
+                    </h4>
+                    <p class="mb-0">
+                         <a href="#" class="alert-link">
+                        </a>
+                    </p>
+                </div>
+            }
+            else
             {
-                // Check if the product is below its low stock threshold
-                var rowClass = product.StockQuantity < product.LowStockThreshold ? "table-warning" : ""; // Add warning class
+                <table class="table table-hover mt-3">
+                    <thead class="table-success">
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Category</th>
+                            <th>Supplier</th>
+                            <th>Price (EGP)</th>
+                            <th>Stock Quantity</th>
+                            <th>Availability</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var product in Model.Products)
+                        {
+                            // Check if the product is below its low stock threshold
+                            var rowClass = product.StockQuantity < product.LowStockThreshold ? "table-warning" : ""; // Add warning class
 
-                <tr  class=" table-default ">
-                    <td>@product.ProductName</td>
-                    <td>@product.Category?.CategoryName</td>
-                    <td>@product.Supplier?.SupplierName</td>
-                    <td>@product.Price</td>
-                    <td>@product.StockQuantity
-                    @if (product.StockQuantity < product.LowStockThreshold)
-                    {
-                        <span class="text-danger text-lg-start"> - Low Stock!</span>
-                    }
-                    </td>
-                    <td>
-                        @if (product.StockQuantity > 0)
-                        {
-                            <span class="badge bg-outline-success text-black">In Stock</span> <!-- In Stock -->
+                            <tr  class=" table-default ">
+                                <td>@product.ProductName</td>
+                                <td>@product.Category?.CategoryName</td>
+                                <td>@product.Supplier?.SupplierName</td>
+                                <td>@product.Price</td>
+                                <td>@product.StockQuantity
+                                @if (product.StockQuantity < product.LowStockThreshold)
+                                {
+                                    <span class="text-danger text-lg-start"> - Low Stock!</span>
+                                }
+                                </td>
+                                <td>
+                                    @if (product.StockQuantity > 0)
+                                    {
+                                        <span class="badge bg-outline-success text-black">In Stock</span> <!-- In Stock -->
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger text-black">Out of Stock</span> <!-- Out of Stock -->
+                                    }
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-outline-danger btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Actions
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <li>
+                                                <a class="dropdown-item" asp-action="Details" asp-route-id="@product.ProductID">
+                                                    <i class="fas fa-info-circle"></i> Details
+                                                </a>
+                                            </li>
+                                            @if (User.IsInRole("Admin"))
+                                            {
+                                                <li>
+                                                    <a class="dropdown-item" asp-action="Edit" asp-route-id="@product.ProductID">
+                                                        <i class="fas fa-edit"></i> Edit
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" asp-action="Delete" asp-route-id="@product.ProductID">
+                                                        <i class="fas fa-trash-alt"></i> Delete
+                                                    </a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </td>
+
+                            </tr>
                         }
-                        else
-                        {
-                            <span class="badge bg-danger text-black">Out of Stock</span> <!-- Out of Stock -->
-                        }
-                    </td>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn btn-outline-danger btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                Actions
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <li>
-                                    <a class="dropdown-item" asp-action="Details" asp-route-id="@product.ProductID">
-                                        <i class="fas fa-info-circle"></i> Details
+                    </tbody>
+                </table>
+
+                <div class="d-flex justify-content-center mt-3">
+                    <nav aria-label="Pagination">
+                        <ul class="pagination">
+                            <!-- Previous Button -->
+                            @if (Model.HasPreviousPage)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("Index", new { page = Model.CurrentPage - 1 })">
+                                        Previous
                                     </a>
                                 </li>
-                                @if (User.IsInRole("Admin"))
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">
+                                        Previous
+                                    </span>
+                                </li>
+                            }
+
+                            <!-- Page Numbers -->
+                            @for (int i = 1; i <= Model.TotalPages; i++)
+                            {
+                                if (i == Model.CurrentPage)
                                 {
-                                    <li>
-                                        <a class="dropdown-item" asp-action="Edit" asp-route-id="@product.ProductID">
-                                            <i class="fas fa-edit"></i> Edit
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" asp-action="Delete" asp-route-id="@product.ProductID">
-                                            <i class="fas fa-trash-alt"></i> Delete
-                                        </a>
+                                    <li class="page-item active">
+                                        <span class="page-link">
+                                            @i
+                                        </span>
                                     </li>
                                 }
-                            </ul>
-                        </div>
-                    </td>
+                                else
+                                {
+                                    <li class="page-item">
+                                        <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
+                                    </li>
+                                }
+                            }
 
-                </tr>
+                            <!-- Next Page Link -->
+                            @if (Model.HasNextPage)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" href="@Url.Action("Index", new { page = Model.CurrentPage + 1 })">
+                                        Next
+                                    </a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item disabled">
+                                    <span class="page-link">
+                                        Next
+                                    </span>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                </div>
+
             }
-        </tbody>
-    </table>
 
-    <div class="d-flex justify-content-center mt-3">
-        <nav aria-label="Pagination">
-            <ul class="pagination">
-                <!-- Previous Button -->
-                @if (Model.HasPreviousPage)
-                {
-                    <li class="page-item">
-                        <a class="page-link" href="@Url.Action("Index", new { page = Model.CurrentPage - 1 })">
-                            Previous
-                        </a>
-                    </li>
-                }
-                else
-                {
-                    <li class="page-item disabled">
-                        <span class="page-link">
-                            Previous
-                        </span>
-                    </li>
-                }
-
-                <!-- Page Numbers -->
-                @for (int i = 1; i <= Model.TotalPages; i++)
-                {
-                    if (i == Model.CurrentPage)
-                    {
-                        <li class="page-item active">
-                            <span class="page-link">
-                                @i
-                            </span>
-                        </li>
-                    }
-                    else
-                    {
-                        <li class="page-item">
-                            <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
-                        </li>
-                    }
-                }
-
-                <!-- Next Page Link -->
-                @if (Model.HasNextPage)
-                {
-                    <li class="page-item">
-                        <a class="page-link" href="@Url.Action("Index", new { page = Model.CurrentPage + 1 })">
-                            Next
-                        </a>
-                    </li>
-                }
-                else
-                {
-                    <li class="page-item disabled">
-                        <span class="page-link">
-                            Next
-                        </span>
-                    </li>
-                }
-            </ul>
-        </nav>
     </div>
-
-}

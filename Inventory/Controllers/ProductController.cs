@@ -1,9 +1,9 @@
-﻿using ECommerce.Model.ViewModels;
-using Inventory.Data;
+﻿using Inventory.Data;
 using Inventory.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Models;
 using System.Drawing.Printing;
 using System.Linq;
 using System.Threading.Tasks;
@@ -256,6 +256,20 @@ namespace Inventory.Controllers
             };
 
             return View("Index", model);
+        }
+
+
+        public IActionResult AddQuantity(int id, int Quantity)
+        {
+
+           var product = _context.Product.Find(id);
+            if (product != null)
+            {
+                product.StockQuantity += Quantity;
+                _context.SaveChanges();
+                TempData["success"] = "Stock quantity updated successfully!";
+            }
+            return RedirectToAction("Index", "Home");
         }
     }
 }

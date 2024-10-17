@@ -1,11 +1,11 @@
-﻿@model FirstMVC.ViewModel.RoleViewModel
-
+﻿@using Models
+@model RoleViewModel
 @{
     ViewData["Title"] = "Role";
 }
 
 <div class="d-flex justify-content-center align-items-center p-4">
-    <div class="bg-white p-4 rounded-3 shadow p-4 w-50 shadow-lg">
+    <div class="">
         <h2 class="text-center mb-3">Create Roles</h2>
         <form asp-action="SaveRole">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
