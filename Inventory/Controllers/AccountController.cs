@@ -9,6 +9,7 @@ using System.Security.Claims;
 
 namespace Inventory.Controllers
 {
+
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> _UserManager;

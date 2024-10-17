@@ -25,125 +25,135 @@
 </head>
 <body class="bg-light-subtle">
 
-   
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
-        @if (TempData["success"] != null)
-        {
-            <div class="toast-container position-absolute">
-                <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="toast-header">
-                        <small>@DateTime.Now</small>
-                        <button type="button" class="btn-close ms-2 mb-1" data-bs-dismiss="toast" aria-label="Close">
-                            <span aria-hidden="true"></span>
-                        </button>
-                    </div>
-                    <div class="toast-body">
-                        @TempData["success"]
+   @if(User.Identity.IsAuthenticated)
+    {
+        <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+            @if (TempData["success"] != null)
+            {
+                <div class="toast-container position-absolute">
+                    <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header">
+                            <small>@DateTime.Now</small>
+                            <button type="button" class="btn-close ms-2 mb-1" data-bs-dismiss="toast" aria-label="Close">
+                                <span aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div class="toast-body">
+                            @TempData["success"]
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
-        else if (TempData["fail"] != null)
-        {
-            <div class="toast-container position-absolute">
-                <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="toast-header">
-                        <small>@DateTime.Now</small>
-                        <button type="button" class="btn-close ms-2 mb-1" data-bs-dismiss="toast" aria-label="Close">
-                            <span aria-hidden="true"></span>
-                        </button>
-                    </div>
-                    <div class="toast-body">
-                        @TempData["fail"]
+            }
+            else if (TempData["fail"] != null)
+            {
+                <div class="toast-container position-absolute">
+                    <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="toast-header">
+                            <small>@DateTime.Now</small>
+                            <button type="button" class="btn-close ms-2 mb-1" data-bs-dismiss="toast" aria-label="Close">
+                                <span aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div class="toast-body">
+                            @TempData["fail"]
+                        </div>
                     </div>
                 </div>
+            }
+
+            <div class="container-fluid">
+                <a class="navbar-brand text-primary" href="/">Inventory</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">@User.Identity.Name</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" asp-action="Profile" asp-controller="Account">My Profile</a>
+                                    <a class="dropdown-item" asp-action="SignOut" asp-controller="Account">Signout</a>
+
+                                </div>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Account</a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" asp-action="Login" asp-controller="Account">Login</a>
+                                    <a class="dropdown-item" asp-action="Register" asp-controller="Account">Register</a>
+
+                                </div>
+                            </li>
+                        }
+
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Product</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-action="Index" asp-controller="Product">All Products</a>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a class="dropdown-item" asp-action="Create" asp-controller="Product">Add Product</a>
+                                }
+
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Categories</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-action="Index" asp-controller="Category">All Category</a>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a class="dropdown-item" asp-action="Create" asp-controller="Category">Add Category</a>
+                                }
+
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Suppliers</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" asp-action="Index" asp-controller="Supplier">All Suppliers</a>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <a class="dropdown-item" asp-action="Create" asp-controller="Supplier">Add Supplier</a>
+                                }
+
+                            </div>
+                        </li>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Admin </a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" asp-action="Role" asp-controller="Account">Add Role</a>
+                                    <a class="dropdown-item" asp-action="Register" asp-controller="Account"></a>
+
+                                </div>
+                            </li>
+                        }
+
+
+
+                    </ul>
+                </div>
             </div>
-        }
+        </nav>
 
-        <div class="container-fluid">
-            <a class="navbar-brand text-primary" href="/">Inventory</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-
-                    @if(User.Identity.IsAuthenticated)
-                    {
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">@User.Identity.Name</a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" asp-action="Profile" asp-controller="Account">My Profile</a>
-                                <a class="dropdown-item" asp-action="SignOut" asp-controller="Account">Signout</a>
-
-                            </div>
-                        </li>
-                    }
-                    else
-                    {
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Account</a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" asp-action="Login" asp-controller="Account">Login</a>
-                                <a class="dropdown-item" asp-action="Register" asp-controller="Account">Register</a>
-
-                            </div>
-                        </li>
-                    }
-                   
-                   
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Product</a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" asp-action="Index" asp-controller="Product">All Products</a>
-                            @if(User.IsInRole("Admin"))
-                            {
-                                <a class="dropdown-item" asp-action="Create" asp-controller="Product">Add Product</a>
-                            }
-
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Categories</a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" asp-action="Index" asp-controller="Category">All Category</a>
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <a class="dropdown-item" asp-action="Create" asp-controller="Category">Add Category</a>
-                            }
-
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Suppliers</a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" asp-action="Index" asp-controller="Supplier">All Suppliers</a>
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <a class="dropdown-item" asp-action="Create" asp-controller="Supplier">Add Supplier</a>
-                            }
-
-                        </div>
-                    </li>
-
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Admin </a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" asp-action="Role" asp-controller="Account">Add Role</a>
-                                <a class="dropdown-item" asp-action="Register" asp-controller="Account"></a>
-
-                            </div>
-                        </li>
-                    }
-                    
-
-
-                </ul>
-            </div>
+    }
+    else
+    {
+        <div class="alert alert-dismissible alert-danger">
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <strong>MUST BE LOGGED IN!</strong>  Login With Your Account
         </div>
-    </nav>
+    }
 
     <div class="container mt-4">
         <div class="card shadow-lg mb-4">
