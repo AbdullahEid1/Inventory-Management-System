@@ -71,7 +71,7 @@
                     @if(User.Identity.IsAuthenticated)
                     {
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Account</a>
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">@User.Identity.Name</a>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" asp-action="Profile" asp-controller="Account">My Profile</a>
                                 <a class="dropdown-item" asp-action="SignOut" asp-controller="Account">Signout</a>
@@ -103,11 +103,27 @@
 
                         </div>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link " href="/Category">Categories</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Categories</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" asp-action="Index" asp-controller="Category">All Category</a>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a class="dropdown-item" asp-action="Create" asp-controller="Category">Add Category</a>
+                            }
+
+                        </div>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link " href="/Supplier">Suppliers</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Suppliers</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" asp-action="Index" asp-controller="Supplier">All Suppliers</a>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a class="dropdown-item" asp-action="Create" asp-controller="Supplier">Add Supplier</a>
+                            }
+
+                        </div>
                     </li>
 
                     @if (User.IsInRole("Admin"))

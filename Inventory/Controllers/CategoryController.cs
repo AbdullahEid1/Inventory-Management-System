@@ -37,6 +37,7 @@ namespace Inventory.Controllers
             {
                 _context.Category.Add(category);
                 _context.SaveChanges();
+                TempData["success"] = "Category added successfully!";
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
@@ -70,6 +71,7 @@ namespace Inventory.Controllers
             {
                 category.CategoryName = updatecategory.CategoryName;
                 _context.SaveChanges();
+                TempData["success"] = "Category updated successfully!";
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
@@ -96,6 +98,7 @@ namespace Inventory.Controllers
             if (category != null)
             {
                 _context.Category.Remove(category);
+                TempData["success"] = "Category deleted successfully!";
                 _context.SaveChanges();
             }
             return RedirectToAction(nameof(Index));
@@ -112,6 +115,7 @@ namespace Inventory.Controllers
             };
 
             _context.Category.Add(category);
+            TempData["success"] = "Category added successfully!";
             _context.SaveChanges();
 
             return Json(new { categoryID = category.CategoryID, categoryName = category.CategoryName });

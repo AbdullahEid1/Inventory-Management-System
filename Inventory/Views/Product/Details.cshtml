@@ -21,8 +21,12 @@ else
             <p><strong>Stock Quantity:</strong> @Model.StockQuantity</p>
             <p><strong>Low Stock Threshold:</strong> @Model.LowStockThreshold</p>
             <p><strong>Is Available:</strong> @(Model.StockQuantity > 0 ? "Yes" : "No")</p>
-            <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.ProductID">Edit</a>
-            <a class="btn btn-secondary" asp-action="Index">Back to Products</a>
+            @if(User.IsInRole("Admin"))
+            {
+                
+            <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@Model.ProductID">Edit</a>
+            }
+            <a class="btn btn-outline-danger" asp-action="Index">Back to Products</a>
         </div>
     </div>
 }

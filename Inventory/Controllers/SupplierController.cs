@@ -47,7 +47,9 @@ namespace Inventory.Controllers
             {
                 _context.Add(supplier);
                 await _context.SaveChangesAsync();
+                TempData["success"] = "Supplier added successfully!";
                 return RedirectToAction(nameof(Index));
+                
             }
             return View(supplier);
         }
@@ -98,7 +100,7 @@ namespace Inventory.Controllers
                 await _context.SaveChangesAsync();
 
                 // Success message and redirection
-                TempData["SuccessMessage"] = "Supplier details updated successfully!";
+                TempData["successMessage"] = "Supplier details updated successfully!";
                 return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateConcurrencyException)
@@ -147,6 +149,7 @@ namespace Inventory.Controllers
             if (supplier != null)
             {
                 _context.Supplier.Remove(supplier);
+                TempData["success"] = "Supplier deleted successfully!";
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));

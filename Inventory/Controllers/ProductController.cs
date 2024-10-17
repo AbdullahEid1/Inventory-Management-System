@@ -1,8 +1,10 @@
-﻿using Inventory.Data;
+﻿using ECommerce.Model.ViewModels;
+using Inventory.Data;
 using Inventory.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -33,8 +35,8 @@ namespace Inventory.Controllers
                 .ToListAsync();
             return View(products);
         }*/
-
-        public async Task<IActionResult> Index(int? categoryId)
+       
+        public async Task<IActionResult> Index(int? categoryId, int page = 1, int pageSize = 6)
         {
             // Load all categories to display in dropdown
             ViewBag.Categories = new SelectList(await _context.Category.ToListAsync(), "CategoryID", "CategoryName");
@@ -47,10 +49,28 @@ namespace Inventory.Controllers
 
             if (categoryId.HasValue && categoryId.Value > 0)
             {
-                products = products.Where(p => p.CategoryID == categoryId);
+                products = products.Where(p => p.CategoryID == categoryId); ;
             }
 
-            return View(await products.ToListAsync());
+            var totalProducts = products.Count();
+
+            products = products
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize);
+                
+
+
+            var totalPages = (int)Math.Ceiling(totalProducts / (double)pageSize);
+
+            var model = new ProductListViewModel
+            {
+                Products = products.ToList(),
+                CurrentPage = page,
+                TotalPages = totalPages
+            };
+
+
+            return View(model);
         }
 
 
@@ -90,6 +110,7 @@ namespace Inventory.Controllers
             {
                 _context.Add(product);
                 await _context.SaveChangesAsync();
+                TempData["success"] = "Product added successfully!";
                 return RedirectToAction(nameof(Index));
             }
             LoadCategoriesAndSuppliers();
@@ -147,6 +168,7 @@ namespace Inventory.Controllers
                     product.LowStockThreshold = updateProduct.LowStockThreshold;
 
                     await _context.SaveChangesAsync();
+                    TempData["success"] = "Product updated successfully!";
                     return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
@@ -195,6 +217,7 @@ namespace Inventory.Controllers
             if (product != null)
             {
                 _context.Product.Remove(product);
+                TempData["success"] = "Product deleted successfully!";
                 await _context.SaveChangesAsync();
             }
 
@@ -206,15 +229,33 @@ namespace Inventory.Controllers
             return _context.Product.Any(e => e.ProductID == id);
         }
 
-        public IActionResult Search(string keyword)
+        public IActionResult Search(string keyword, int page = 1, int pageSize = 6)
         {
+            ViewBag.Categories = new SelectList( _context.Category.ToList(), "CategoryID", "CategoryName");
+
             var products = _context.Product
                 .Where(p => p.ProductName.StartsWith(keyword))
                 .Include(p => p.Category)
                 .Include(p => p.Supplier)
-                .ToList();
+                .AsQueryable();
 
-            return View("Index", products);
+            products = products
+               .Skip((page - 1) * pageSize)
+               .Take(pageSize);
+
+
+            var totalProducts = products.Count();
+
+            var totalPages = (int)Math.Ceiling(totalProducts / (double)pageSize);
+
+            var model = new ProductListViewModel
+            {
+                Products = products.ToList(),
+                CurrentPage = page,
+                TotalPages = totalPages
+            };
+
+            return View("Index", model);
         }
     }
 }
