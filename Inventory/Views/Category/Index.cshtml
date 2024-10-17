@@ -46,9 +46,14 @@ else
                                 Actions
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                
-                              @if(User.IsInRole("Admin"))
+
+                                @if (User.IsInRole("Admin"))
                                 {
+                                    <li>
+                                        <a class="dropdown-item" asp-action="PrintProducts" asp-route-id="@category.CategoryID">
+                                            <i class="fas fa-trash-alt"></i> Show Products
+                                        </a>
+                                    </li>
                                     <li>
                                         <a class="dropdown-item" asp-action="Edit" asp-route-id="@category.CategoryID">
                                             <i class="fas fa-edit"></i> Edit
@@ -63,8 +68,8 @@ else
                                 else
                                 {
                                     <li>
-                                        <a class="dropdown-item" >
-                                            <i class="fas fa-info-circle"></i> Nothing To Do
+                                        <a class="dropdown-item" asp-action="PrintProducts" asp-route-id="@category.CategoryID">
+                                            <i class="fas fa-trash-alt"></i> Show Products
                                         </a>
                                     </li>
                                 }
