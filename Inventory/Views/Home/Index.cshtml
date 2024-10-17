@@ -6,35 +6,38 @@
 
 <div class="container-fluid">
     <div class="row">
-        
-        
-
-
-        <!-- Main content -->
-        <div class="mb-2 col-md-8 main-content">
-            <!-- Top Bar -->
+        <!-- Main Content Section -->
+        <div class="col-md-8 mb-2 main-content">
+            <!-- Get Product Section -->
             <div class="card shadow-lg mb-4">
                 <div class="card-header bg-white">
                     <h5 class="mb-0">Get Product</h5>
                 </div>
-
                 <div class="card-body">
-                    <form>
-                        
+                    <div id="productDetailsContainer"></div> <!-- Product details will be loaded here via AJAX -->
+
+                    <form asp-controller="Product" asp-action="ExportProduct">
+                        <div class="input-group">
+                            <label for="id" class="input-group-text">Product ID</label>
+                            <input id="productIdInput" name="id" type="number" value="1" class="form-control" aria-label="Product ID" min="1" />
+                            <input id="productIdInput" name="quantity" type="number" value="1" class="form-control" aria-label="Product ID" min="1"/>
+                            <button type="submit" class="px-2 btn btn-outline-success btn-sm">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                        </div>
                     </form>
-
                 </div>
-
-
-
             </div>
+
+            <!-- Low Stock Alert -->
             @if (Model.LowStockProducts.Any(product => product.StockQuantity < product.LowStockThreshold))
             {
                 <div class="alert alert-warning">
-                    <strong>Low Stock Alert!</strong> Some products are below their stock threshold. Please review the product list.
+                    <strong>Low Stock Alert!</strong> Some products are below their stock threshold. Please review the list.
                 </div>
             }
-            <!-- Recent Orders Table -->
+
+            <!-- Low Stock Products Table -->
             <div class="card shadow-lg border-0">
                 <div class="card-header bg-white">
                     <h5 class="mb-0">Low Stock Products</h5>
@@ -48,7 +51,7 @@
                                 <th>Supplier</th>
                                 <th>Price</th>
                                 <th>Stock</th>
-                                @if(User.Identity.IsAuthenticated)
+                                @if (User.Identity.IsAuthenticated)
                                 {
                                     <th>Add Quantity</th>
                                 }
@@ -56,7 +59,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach(var product in Model.LowStockProducts)
+                            @foreach (var product in Model.LowStockProducts)
                             {
                                 <tr>
                                     <td>@product.ProductName</td>
@@ -69,17 +72,13 @@
                                         <td>
                                             <form asp-action="AddQuantity" asp-controller="Product" asp-route-id="@product.ProductID">
                                                 <div class="input-group">
-                                                    <!-- Input for Quantity -->
                                                     <input name="Quantity" type="number" value="1" class="form-control" aria-label="Quantity" min="1" />
-
-                                                    <!-- Button for Adding Quantity -->
-                                                    <button type="submit" asp-action="AddQuantity" asp-controller="Product" asp-route-id="@product.ProductID" class="px-2 btn btn-outline-success btn-sm">
-                                                        <i class="fas fa-plus">+</i>
+                                                    <button type="submit" class="px-2 btn btn-outline-success btn-sm">
+                                                        <i class="fas fa-plus"></i>
                                                     </button>
                                                 </div>
                                             </form>
                                         </td>
-
                                     }
                                     <td>
                                         <div class="dropdown">
@@ -92,7 +91,6 @@
                                                         <i class="fas fa-info-circle"></i> Details
                                                     </a>
                                                 </li>
-                                               
                                                 @if (User.IsInRole("Admin"))
                                                 {
                                                     <li>
@@ -111,58 +109,114 @@
                                     </td>
                                 </tr>
                             }
-                            
-                            
-                            <!-- More rows as needed -->
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- Sidebar Stats -->
-        <aside class="col-md-2 flex flex-row">
-
+        <!-- Sidebar Stats Section -->
+        <aside class="col-md-4">
             <div class="row">
-                <div class="card mb-3 shadow-lg card-stat">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Total Users</h5>
-                        <h2>@Model.TotalUsers</h2>
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <a asp-action="ShowAllUsers" class="btn btn-outline-dark">Show  Users</a>
-
-                        }
+                @if (User.IsInRole("Admin"))
+                {
+                    <div class="col-md-6 mb-3">
+                        <div class="card shadow-lg card-stat">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Total Stock Value</h5>
+                                <h4>$@Model.TotalStockValue</h4>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-lg card-stat">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Total Users</h5>
+                            <h4>@Model.TotalUsers</h4>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-action="ShowAllUsers" class="btn btn-outline-dark">Show Users</a>
+                            }
+                        </div>
                     </div>
                 </div>
-
-                <div class="card mb-3 shadow-lg card-stat">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Total Categories</h5>
-                        <h2>@Model.TotalCategories</h2>
-                        <a asp-action="Index" asp-controller="Category" class="btn btn-outline-danger">Show  Categories</a>
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-lg card-stat">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Total Categories</h5>
+                            <h4>@Model.TotalCategories</h4>
+                            <a asp-action="Index" asp-controller="Category" class="btn btn-outline-danger">Show Categories</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-lg card-stat">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Total Products</h5>
+                            <h4>@Model.TotalProducts</h4>
+                            <a asp-action="Index" asp-controller="Product" class="btn btn-outline-success">Show Products</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-lg card-stat">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Total Suppliers</h5>
+                            <h4>@Model.TotalSupplires</h4>
+                            <a asp-action="Index" asp-controller="Supplier" class="btn btn-outline-secondary">Show Suppliers</a>
+                        </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="row">
-                <div class="card mb-3 shadow-lg card-stat">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Total Products</h5>
-                        <h2>@Model.TotalProducts</h2>
-                        <a asp-action="Index" asp-controller="Product" class="btn btn-outline-success">Show  Products</a>
-                    </div>
-                </div>
-                <div class="card mb-3 shadow-lg card-stat">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Total Suppliers</h5>
-                        <h2>@Model.TotalSupplires</h2>
-                        <a asp-action="Index" asp-controller="Supplier" class="btn btn-outline-secondary">Show  Suppliers</a>
-                    </div>
-                </div>
-            </div>
-            
         </aside>
     </div>
 </div>
 
+<!-- AJAX Script for Product Search -->
+@* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        // Handle form submission with AJAX
+        $('#productForm').on('submit', function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            var productId = $('#productIdInput').val();
+
+            $.ajax({
+                url: '@Url.Action("GetProduct", "Product")', // Controller action
+                type: 'POST',
+                data: { id: productId },
+                success: function (response) {
+                    if (response.success === false) {
+                        alert(response.message); // Product not found
+                    } else {
+                        $('#productDetailsContainer').html(response); // Load product details
+                    }
+                },
+                error: function () {
+                    alert('An error occurred while fetching the product.');
+                }
+            });
+        });
+    });
+
+    // Export function to handle export logic
+    function exportProduct(productId,quantity) {
+        $.ajax({
+            url: '@Url.Action("ExportProduct", "Product")', // Controller action
+            type: 'POST',
+            data: { id: productId, Quantity: quantity },
+            success: function (response) {
+                if (response.success === false) {
+                    alert(response.message); // Product not found
+                } else {
+                    $('#productDetailsContainer').html(response); // Load product details
+                }
+            },
+            error: function () {
+                alert('An error occurred while fetching the product.');
+            }
+    }
+</script> *@

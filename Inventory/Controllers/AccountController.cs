@@ -139,5 +139,27 @@ namespace Inventory.Controllers
 
             return View("Role");
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public IActionResult DeleteUser(string id)
+        {
+            ApplicationUser applicationUser = _UserManager.FindByIdAsync(id.ToString()).Result;
+            if (applicationUser != null)
+            {
+                IdentityResult result = _UserManager.DeleteAsync(applicationUser).Result;
+                if (result.Succeeded)
+                {
+                    TempData["success"] = "User Deleted Successfully";
+                    return RedirectToAction("Index", "Home");
+                }
+                foreach (var item in result.Errors)
+                {
+                    ModelState.AddModelError("", item.Description);
+                }
+            }
+            TempData["fail"] = "User Not Found";
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
