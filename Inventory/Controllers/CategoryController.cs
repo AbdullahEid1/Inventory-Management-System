@@ -127,11 +127,15 @@ namespace Inventory.Controllers
 
         public IActionResult Search(string keyword)
         {
-            var categories = _context.Category
-                                     .Where(c => c.CategoryName.StartsWith(keyword))
-                                     .ToList();
+            var categories = string.IsNullOrEmpty(keyword)
+                ? _context.Category.ToList()
+                : _context.Category
+                    .Where(c => c.CategoryName.StartsWith(keyword))
+                    .ToList();
 
-            return View("Index", categories); // Reuse the Index view to display search results
+            ViewData["Keyword"] = keyword;
+
+            return View("Index", categories);
         }
 
 

@@ -229,19 +229,30 @@ namespace Inventory.Controllers
             return _context.Product.Any(e => e.ProductID == id);
         }
 
+        
+        //Get
         public IActionResult Search(string keyword, int page = 1, int pageSize = 6)
-        {
-            ViewBag.Categories = new SelectList( _context.Category.ToList(), "CategoryID", "CategoryName");
+        {   
+            var products = string.IsNullOrEmpty(keyword)
+                ? _context.Product
+                    .Include(p => p.Category)
+                    .Include(p => p.Supplier)
+                    .AsQueryable()
+                : _context.Product
+                    .Where(p => p.ProductName.StartsWith(keyword))
+                    .Include(p => p.Category)
+                    .Include(p => p.Supplier)
+                    .AsQueryable();
 
-            var products = _context.Product
-                .Where(p => p.ProductName.StartsWith(keyword))
-                .Include(p => p.Category)
-                .Include(p => p.Supplier)
-                .AsQueryable();
+            ViewData["Keyword"] = keyword;
 
-            products = products
+            // Load all categories to display in dropdown for filteration
+            ViewBag.Categories = new SelectList(_context.Category.ToList(), "CategoryID", "CategoryName");
+
+            // Pagination
+            /*products = products
                .Skip((page - 1) * pageSize)
-               .Take(pageSize);
+               .Take(pageSize);*/
 
 
             var totalProducts = products.Count();
@@ -271,6 +282,7 @@ namespace Inventory.Controllers
             }
             return RedirectToAction("Index", "Home");
         }
+
         [HttpPost]
         public IActionResult GetProduct(int id)
         {

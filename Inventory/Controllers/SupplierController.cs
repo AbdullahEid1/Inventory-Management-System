@@ -102,7 +102,7 @@ namespace Inventory.Controllers
                 await _context.SaveChangesAsync();
 
                 // Success message and redirection
-                TempData["successMessage"] = "Supplier details updated successfully!";
+                TempData["success"] = "Supplier updated successfully!";
                 return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateConcurrencyException)
