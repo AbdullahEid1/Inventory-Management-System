@@ -11,7 +11,7 @@
             <!-- Get Product Section -->
             <div class="card shadow-lg mb-4">
                 <div class="card-header bg-white">
-                    <h5 class="mb-0">Get Product</h5>
+                    <h5 class="mb-0">Export Product</h5>
                 </div>
                 <div class="card-body">
                     <div id="productDetailsContainer"></div> <!-- Product details will be loaded here via AJAX -->
@@ -22,7 +22,7 @@
                             <input id="productIdInput" name="id" type="number" value="1" class="form-control" aria-label="Product ID" min="1" />
                             <input id="productIdInput" name="quantity" type="number" value="1" class="form-control" aria-label="Product ID" min="1"/>
                             <button type="submit" class="px-2 btn btn-outline-success btn-sm">
-                                <i class="fas fa-search"></i> Search
+                                <i class="fas fa-search"></i> Export
                             </button>
                         </div>
                     </form>
@@ -136,7 +136,7 @@
                             <h4>@Model.TotalUsers</h4>
                             @if (User.IsInRole("Admin"))
                             {
-                                <a asp-action="ShowAllUsers" class="btn btn-outline-dark">Show Users</a>
+                                <a asp-action="ShowUsers" class="btn btn-outline-dark">Show Users</a>
                             }
                         </div>
                     </div>
@@ -164,7 +164,7 @@
                         <div class="card-body text-center">
                             <h5 class="card-title">Total Suppliers</h5>
                             <h4>@Model.TotalSupplires</h4>
-                            <a asp-action="Index" asp-controller="Supplier" class="btn btn-outline-secondary">Show Suppliers</a>
+                            <a asp-action="Index" asp-controller="Supplier" class="btn btn-outline-info">Show Suppliers</a>
                         </div>
                     </div>
                 </div>
