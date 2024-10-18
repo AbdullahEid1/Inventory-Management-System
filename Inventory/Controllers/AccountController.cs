@@ -89,7 +89,7 @@ namespace Inventory.Controllers
                 IdentityResult result = await _UserManager.CreateAsync(applicationUser, model.Password);
                 if (result.Succeeded)
                 {
-                    await _UserManager.AddToRoleAsync(applicationUser, "Admin");
+                    await _UserManager.AddToRoleAsync(applicationUser, "Staff");
                     TempData["success"] = "Account Created Successfully";
 
                     await _SigninManager.SignInAsync(applicationUser, isPersistent: false);
