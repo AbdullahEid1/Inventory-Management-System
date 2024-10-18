@@ -89,7 +89,7 @@ namespace Inventory.Controllers
                 IdentityResult result = await _UserManager.CreateAsync(applicationUser, model.Password);
                 if (result.Succeeded)
                 {
-                    await _UserManager.AddToRoleAsync(applicationUser, "Staff");
+                    await _UserManager.AddToRoleAsync(applicationUser, "Admin");
                     TempData["success"] = "Account Created Successfully";
 
                     await _SigninManager.SignInAsync(applicationUser, isPersistent: false);
@@ -140,8 +140,10 @@ namespace Inventory.Controllers
             return View("Role");
         }
 
+
+
+
         [Authorize(Roles = "Admin")]
-        [HttpPost]
         public IActionResult DeleteUser(string id)
         {
             ApplicationUser applicationUser = _UserManager.FindByIdAsync(id.ToString()).Result;

@@ -44,11 +44,15 @@
                                         Actions
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <li>
-                                            <a class="dropdown-item" asp-action="DeleteUser" asp-controller="Account" asp-route-id="@user.userid">
-                                                <i class="fas fa-info-circle"></i> Delete User
-                                            </a>
-                                        </li>
+                                        @if(User.IsInRole("Admin"))
+                                        {
+                                            <li>
+                                                <a class="dropdown-item" asp-action="DeleteUser" asp-controller="Account" asp-route-id="@user.userid">
+                                                    <i class="fas fa-info-circle"></i> Delete User
+                                                </a>
+                                            </li>
+                                        }
+                                       
                                         
                                             
                                         
