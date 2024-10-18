@@ -30,8 +30,6 @@ namespace Inventory.Controllers
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize);
 
-
-
             var totalPages = (int)Math.Ceiling(totalcategories / (double)pageSize);
 
             var model = new CategoryListViewModel
@@ -40,7 +38,6 @@ namespace Inventory.Controllers
                 CurrentPage = page,
                 TotalPages = totalPages
             };
-
 
             return View(model);
         }

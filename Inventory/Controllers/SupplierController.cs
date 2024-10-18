@@ -19,18 +19,35 @@ namespace Inventory.Controllers
         }
 
         // GET: Supplier
-        public async Task<IActionResult> Index(string searchString)
+        public IActionResult Index(string searchString, int page = 1, int pageSize = 6)
         {
             // Retrieve suppliers and apply search if necessary
             var suppliers = string.IsNullOrEmpty(searchString)
-                ? await _context.Supplier.ToListAsync()
-                : await _context.Supplier
+                ? _context.Supplier.AsQueryable()
+                : _context.Supplier
                     .Where(s => s.SupplierName.StartsWith(searchString))
-                    .ToListAsync();
+                    .AsQueryable();
 
             ViewData["SearchString"] = searchString;
 
-            return View(suppliers);
+            // Pagination
+
+            var totalsuppliers = suppliers.Count();
+
+            suppliers = suppliers
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize);
+
+            var totalPages = (int)Math.Ceiling(totalsuppliers / (double)pageSize);
+
+            var model = new SupplierListViewModel
+            {
+                Suppliers = suppliers.ToList(),
+                CurrentPage = page,
+                TotalPages = totalPages
+            };
+
+            return View(model);
         }
 
 

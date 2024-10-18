@@ -26,15 +26,6 @@ namespace Inventory.Controllers
             ViewBag.Suppliers = _context.Supplier.ToList();
         }
 
-        // GET: Product
-        /*public async Task<IActionResult> Index()
-        {
-            var products = await _context.Product
-                .Include(p => p.Category)
-                .Include(p => p.Supplier)
-                .ToListAsync();
-            return View(products);
-        }*/
        
         public async Task<IActionResult> Index(int? categoryId, int page = 1, int pageSize = 6)
         {

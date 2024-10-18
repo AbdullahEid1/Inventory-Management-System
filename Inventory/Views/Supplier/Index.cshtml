@@ -1,4 +1,6 @@
-﻿@model IEnumerable<Inventory.Models.Supplier>
+﻿@* @model IEnumerable<Inventory.Models.Supplier> *@
+@using Inventory.Models
+@model SupplierListViewModel
 
 @{
     ViewData["Title"] = "Suppliers List";
@@ -22,7 +24,7 @@
         <a asp-action="Create" class="btn btn-outline-success mb-3">Create New Supplier</a>
     }
 
-    @if (!Model.Any())
+    @if (!Model.Suppliers.Any())
     {
         <div class="alert alert-info text-center">
             No suppliers available.
@@ -41,7 +43,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var supplier in Model)
+                @foreach (var supplier in Model.Suppliers)
                 {
                     <tr class=" table-default ">
                         <td>@supplier.SupplierName</td>
@@ -95,5 +97,66 @@
                 }
             </tbody>
         </table>
+
+        <div class="d-flex justify-content-center mt-3">
+            <nav aria-label="Pagination">
+                <ul class="pagination">
+                    <!-- Previous Button -->
+                    @if (Model.HasPreviousPage)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", new { page = Model.CurrentPage - 1 })">
+                                Previous
+                            </a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link">
+                                Previous
+                            </span>
+                        </li>
+                    }
+
+                    <!-- Page Numbers -->
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        if (i == Model.CurrentPage)
+                        {
+                            <li class="page-item active">
+                                <span class="page-link">
+                                    @i
+                                </span>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
+                            </li>
+                        }
+                    }
+
+                    <!-- Next Page Link -->
+                    @if (Model.HasNextPage)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("Index", new { page = Model.CurrentPage + 1 })">
+                                Next
+                            </a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="page-item disabled">
+                            <span class="page-link">
+                                Next
+                            </span>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
     }
 </div>
