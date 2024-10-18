@@ -24,7 +24,7 @@
 
             <!-- Search Form -->
             <form asp-action="Search" method="get" class="form-inline mb-3">
-        <input type="text" name="keyword" value="@ViewData["Keyword"]" class="form-control mr-2" placeholder="Search Products" />
+                <input type="text" name="keyword" value="@ViewData["Keyword"]" class="form-control mr-2" placeholder="Search Products" />
                 <button type="submit" class="btn btn-outline-info mt-3">Search</button>
             </form>
 
@@ -43,12 +43,29 @@
                 <button type="submit" class="btn btn-outline-info ml-2 mt-3">Filter</button>
             </form>
 
+            <!-- Create New Product -->
             <div>
-                <button class="btn btn-outline-success mb-3" onclick="window.print()">Print Products</button>
                 <a class="btn btn-outline-success mb-3" asp-action="Create">
                     <i class="fas fa-plus"></i> Create New Product
                 </a>
             </div>
+
+            <!-- Generate Report -->
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="dropdown mb-3">
+                    <button class="btn btn-outline-success btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        Generate Report
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <li>
+                            <a class="dropdown-item" asp-action="GeneratePDFReport">
+                                <i class="fas fa-trash-alt"></i> PDF File
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            }
 
 
             <!-- Check if there are products -->

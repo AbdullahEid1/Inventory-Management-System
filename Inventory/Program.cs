@@ -2,6 +2,8 @@ using Inventory.Data;
 using Inventory.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using DinkToPdf;
+using DinkToPdf.Contracts;
 using Microsoft.Extensions.Options;
 namespace Inventory
 {
@@ -11,6 +13,11 @@ namespace Inventory
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Register DinkToPdf as a service
+            builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+
+
+            // Identity
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(
                 option =>
                 {

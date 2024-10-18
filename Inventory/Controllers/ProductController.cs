@@ -3,6 +3,11 @@ using Inventory.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using DinkToPdf;
+using DinkToPdf.Contracts;
+using OfficeOpenXml;
+using System.IO;
+using Microsoft.AspNetCore.Authorization;
 using Models;
 using System.Drawing.Printing;
 using System.Linq;
@@ -13,10 +18,12 @@ namespace Inventory.Controllers
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IConverter _pdfConverter;
 
-        public ProductController(ApplicationDbContext context)
+        public ProductController(ApplicationDbContext context, IConverter pdfConverter)
         {
             _context = context;
+            _pdfConverter = pdfConverter;
         }
 
         // Utility function to load categories and suppliers
@@ -308,6 +315,50 @@ namespace Inventory.Controllers
                 TempData["fail"] = "Product not found";
             }
             return RedirectToAction("Index", "Home");
+        }
+
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public IActionResult GeneratePDFReport()
+        {
+            var products = _context.Product
+                .Include(p => p.Category)
+                .Include(p => p.Supplier)
+                .ToList();
+
+            string htmlContent = "<h1>Inventory Report</h1><table border='1'><thead><tr><th>Product Name</th><th>Stock Quantity</th><th>Price</th><th>Category</th><th>Supplier</th></tr></thead><tbody>";
+
+            foreach (var product in products)
+            {
+                htmlContent += $"<tr><td>{product.ProductName}</td><td>{product.StockQuantity}</td><td>{product.Price}</td><td>{product.Category.CategoryName}</td><td>{product.Supplier.SupplierName}</td></tr>";
             }
+
+            htmlContent += "</tbody></table>";
+
+            var pdfDoc = new HtmlToPdfDocument()
+            {
+                GlobalSettings = {
+                    ColorMode = ColorMode.Color,
+                    Orientation = Orientation.Portrait,
+                    PaperSize = DinkToPdf.PaperKind.A4,
+                    Margins = new MarginSettings { Top = 10 },
+                    DocumentTitle = "Inventory Report"
+                },
+                Objects = {
+                    new ObjectSettings()
+                    {
+                        PagesCount = true,
+                        HtmlContent = htmlContent,
+                        WebSettings = { DefaultEncoding = "utf-8" },
+                        FooterSettings = { FontSize = 8, Right = "Page [page] of [toPage]" }
+                    }
+                }
+            };
+
+            var pdf = _pdfConverter.Convert(pdfDoc);
+            return File(pdf, "application/pdf", "InventoryReport.pdf");
+        }
+
     }
 }
