@@ -2,6 +2,7 @@
 using Inventory.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace Inventory.Controllers
@@ -17,11 +18,31 @@ namespace Inventory.Controllers
             _context = context;
         }
 
+
         // GET: Category/Index
-        public IActionResult Index()
+        public IActionResult Index(int page = 1, int pageSize = 6)
         {
-            var categories = _context.Category.ToList();
-            return View(categories);
+            var categories = _context.Category.AsQueryable();
+
+            var totalcategories = categories.Count();
+
+            categories = categories
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize);
+
+
+
+            var totalPages = (int)Math.Ceiling(totalcategories / (double)pageSize);
+
+            var model = new CategoryListViewModel
+            {
+                Categories = categories.ToList(),
+                CurrentPage = page,
+                TotalPages = totalPages
+            };
+
+
+            return View(model);
         }
 
 
@@ -125,17 +146,35 @@ namespace Inventory.Controllers
         }
 
 
-        public IActionResult Search(string keyword)
+        //Get: Category/Search
+        public IActionResult Search(string keyword, int page = 1, int pageSize = 6)
         {
             var categories = string.IsNullOrEmpty(keyword)
-                ? _context.Category.ToList()
+                ? _context.Category.AsQueryable()
                 : _context.Category
                     .Where(c => c.CategoryName.StartsWith(keyword))
-                    .ToList();
+                    .AsQueryable();
 
             ViewData["Keyword"] = keyword;
 
-            return View("Index", categories);
+            // Pagination
+
+            var totalcategories = categories.Count();
+
+            categories = categories
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize);
+
+            var totalPages = (int)Math.Ceiling(totalcategories / (double)pageSize);
+
+            var model = new CategoryListViewModel
+            {
+                Categories = categories.ToList(),
+                CurrentPage = page,
+                TotalPages = totalPages
+            };
+
+            return View("Index", model);
         }
 
 

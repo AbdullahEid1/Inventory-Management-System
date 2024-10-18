@@ -230,9 +230,9 @@ namespace Inventory.Controllers
         }
 
         
-        //Get
+        //Get: Product/Search
         public IActionResult Search(string keyword, int page = 1, int pageSize = 6)
-        {   
+        {
             var products = string.IsNullOrEmpty(keyword)
                 ? _context.Product
                     .Include(p => p.Category)
@@ -250,12 +250,11 @@ namespace Inventory.Controllers
             ViewBag.Categories = new SelectList(_context.Category.ToList(), "CategoryID", "CategoryName");
 
             // Pagination
-            /*products = products
-               .Skip((page - 1) * pageSize)
-               .Take(pageSize);*/
-
-
             var totalProducts = products.Count();
+
+            products = products
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize);
 
             var totalPages = (int)Math.Ceiling(totalProducts / (double)pageSize);
 
@@ -270,6 +269,7 @@ namespace Inventory.Controllers
         }
 
 
+        //Get: Product/AddQuantity
         public IActionResult AddQuantity(int id, int Quantity)
         {
 
@@ -283,6 +283,8 @@ namespace Inventory.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+
+        //Post: Product/GetProduct
         [HttpPost]
         public IActionResult GetProduct(int id)
         {
@@ -298,6 +300,8 @@ namespace Inventory.Controllers
             }
         }
 
+
+        //Get: Product/ExportProduct
         public IActionResult ExportProduct(int id, int quantity)
         {
 
