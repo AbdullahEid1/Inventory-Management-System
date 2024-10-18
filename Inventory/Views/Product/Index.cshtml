@@ -60,7 +60,7 @@
             }
             else
             {
-                <table class="table table-hover mt-3">
+                    <table class="table table-hover table-bordered mt-3">
                     <thead class="table-success">
                         <tr>
                             <th>Product Name</th>
@@ -78,7 +78,7 @@
                             // Check if the product is below its low stock threshold
                             var rowClass = product.StockQuantity < product.LowStockThreshold ? "table-warning" : ""; // Add warning class
 
-                            <tr  class=" table-default">
+                            <tr  class="@rowClass">
                                 <td>@product.ProductName</td>
                                 <td>@product.Category?.CategoryName</td>
                                 <td>@product.Supplier?.SupplierName</td>

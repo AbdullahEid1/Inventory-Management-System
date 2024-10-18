@@ -21,7 +21,7 @@ else
             <h5 class="card-title">@Model.ProductName</h5>
             <p><strong>Category:</strong> @(Model.Category?.CategoryName ?? "N/A")</p>
             <p><strong>Supplier:</strong> @(Model.Supplier?.SupplierName ?? "N/A")</p>
-            <p><strong>Price:</strong> @Model.Price.ToString("C")</p>
+            <p><strong>Price:</strong> @Model.Price (EGP)</p>
             <p><strong>Stock Quantity:</strong> @Model.StockQuantity</p>
         </div>
     </div>
