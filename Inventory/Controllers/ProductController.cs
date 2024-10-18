@@ -327,7 +327,10 @@ namespace Inventory.Controllers
                 .Include(p => p.Supplier)
                 .ToList();
 
-            string htmlContent = "<h1>Inventory Report</h1><table border='1'><thead><tr><th>Product Name</th><th>Stock Quantity</th><th>Price</th><th>Category</th><th>Supplier</th></tr></thead><tbody>";
+            var htmlContent = $"<p>Date: {DateTime.Now.ToString("yyyy-MM-dd")}</p>";
+            htmlContent += $"<p>Time: {DateTime.Now.ToString("HH:mm:ss")}</p>";
+
+            htmlContent += "<h1>Inventory Report</h1><table border='1'><thead><tr><th>Product Name</th><th>Stock Quantity</th><th>Price</th><th>Category</th><th>Supplier</th></tr></thead><tbody>";
 
             foreach (var product in products)
             {
@@ -336,7 +339,8 @@ namespace Inventory.Controllers
 
             htmlContent += "</tbody></table>";
 
-            var pdfDoc = new HtmlToPdfDocument()
+            var converter = new BasicConverter(new PdfTools());
+            var doc = new HtmlToPdfDocument()
             {
                 GlobalSettings = {
                     ColorMode = ColorMode.Color,
@@ -356,7 +360,7 @@ namespace Inventory.Controllers
                 }
             };
 
-            var pdf = _pdfConverter.Convert(pdfDoc);
+            byte[] pdf = _pdfConverter.Convert(doc);
             return File(pdf, "application/pdf", "InventoryReport.pdf");
         }
 
