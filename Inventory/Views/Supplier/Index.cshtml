@@ -4,91 +4,96 @@
     ViewData["Title"] = "Suppliers List";
 }
 
-<h2>Suppliers List</h2>
+<div class="card-header bg-white">
+    <h3 class="text-center mt-1">All Suppliers</h3>
+</div>
 
-<!-- Search Form -->
-<form asp-action="Index" method="get" class="form-inline mb-3">
-    <input type="text" name="searchString" value="@ViewData["SearchString"]" class="form-control mr-2" placeholder="Search Suppliers" />
-    <button type="submit" class="btn btn-outline-info mt-3">Search</button>
-</form>
+<div class="card-body">
 
-@if (User.IsInRole("Admin"))
-{
+    <!-- Search Form -->
+    <form asp-action="Index" method="get" class="form-inline mb-3">
+        <input type="text" name="searchString" value="@ViewData["SearchString"]" class="form-control mr-2" placeholder="Search Suppliers" />
+        <button type="submit" class="btn btn-outline-info mt-3">Search</button>
+    </form>
 
-    <a asp-action="Create" class="btn btn-outline-success mb-3">Create New Supplier</a>
-}
+    @if (User.IsInRole("Admin"))
+    {
 
-@if (!Model.Any())
-{
-    <div class="alert alert-info text-center">
-        No suppliers available.
-    </div>
-}
-else
-{
-    <table class="table  table-hover  mt-3">
-        <thead class="table-success">
-            <tr>
-                <th>Supplier Name</th>
-                <th>Phone</th>
-                <th>Email</th>
-                <th>Address</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var supplier in Model)
-            {
-                <tr class=" table-default ">
-                    <td>@supplier.SupplierName</td>
-                    <td>@supplier.Phone</td>
-                    <td>@supplier.Email</td>
-                    <td>@supplier.Address</td>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn btn-outline-danger btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                Actions
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                
-                                @if (User.IsInRole("Admin"))
-                                {
-                                    <li>
-                                        <a class="dropdown-item" asp-action="PrintProducts" asp-route-id="@supplier.SupplierID">
-                                            <i class="fas fa-trash-alt"></i> Show Products
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" asp-action="Edit" asp-route-id="@supplier.SupplierID">
-                                            <i class="fas fa-edit"></i> Edit
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" asp-action="Delete" asp-route-id="@supplier.SupplierID">
-                                            <i class="fas fa-trash-alt"></i> Delete
-                                        </a>
-                                    </li>
-                                }
-                                else
-                                {
-                                    <li>
-                                        <a class="dropdown-item" asp-action="PrintProducts" asp-route-id="@supplier.SupplierID">
-                                            <i class="fas fa-trash-alt"></i> Show Products
-                                        </a>
-                                    </li>
-                                }
-                               
-                            </ul>
-                        </div>
-                    </td>
+        <a asp-action="Create" class="btn btn-outline-success mb-3">Create New Supplier</a>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            No suppliers available.
+        </div>
+    }
+    else
+    {
+        <table class="table table-hover table-bordered mt-3 text-center">
+            <thead class="table-success">
+                <tr>
+                    <th>Supplier Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Address</th>
+                    <th>Actions</th>
                 </tr>
-            }
-            @if (TempData["SuccessMessage"] != null)
-            {
-                <div class="alert alert-success">
-                    @TempData["SuccessMessage"]
-                </div>
-            }
-        </tbody>
-    </table>
-}
+            </thead>
+            <tbody>
+                @foreach (var supplier in Model)
+                {
+                    <tr class=" table-default ">
+                        <td>@supplier.SupplierName</td>
+                        <td>@supplier.Phone</td>
+                        <td>@supplier.Email</td>
+                        <td>@supplier.Address</td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-outline-danger btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Actions
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <li>
+                                            <a class="dropdown-item" asp-action="PrintProducts" asp-route-id="@supplier.SupplierID">
+                                                <i class="fas fa-trash-alt"></i> Show Products
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" asp-action="Edit" asp-route-id="@supplier.SupplierID">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" asp-action="Delete" asp-route-id="@supplier.SupplierID">
+                                                <i class="fas fa-trash-alt"></i> Delete
+                                            </a>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li>
+                                            <a class="dropdown-item" asp-action="PrintProducts" asp-route-id="@supplier.SupplierID">
+                                                <i class="fas fa-trash-alt"></i> Show Products
+                                            </a>
+                                        </li>
+                                    }
+                               
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success">
+                        @TempData["SuccessMessage"]
+                    </div>
+                }
+            </tbody>
+        </table>
+    }
+</div>
