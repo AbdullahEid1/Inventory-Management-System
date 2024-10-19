@@ -29,7 +29,7 @@ To run this project locally, follow these steps:
 * Git
 
 **Steps**
-1. Clone the repository:
+1. Clone the repository: \n
      git clone https://github.com/Ahmed0Tawfik/Inventory_Management_System.git
 2. Navigate to the project folder:
      cd Inventory-Management-System
@@ -49,12 +49,14 @@ To run this project locally, follow these steps:
 * Create and manage roles and users.
 * Manage products, categories, and suppliers.
 * Export products from the stock.
+* Update low stock and out-of-stock quantities.
 * Generate PDF and Excel reports of products and stock levels.
 * View detailed stock information, including low stock and out-of-stock warnings and the total stock value.
 
 **Staff Features:**
 * View products, categories, and suppliers.
 * Export products from the stock.
+* Update low stock and out-of-stock quantities.
 * Track stock levels and receive low stock and out-of-stock warnings.
 
 # Reporting Features
