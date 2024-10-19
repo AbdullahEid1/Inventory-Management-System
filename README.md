@@ -30,7 +30,7 @@ To run this project locally, follow these steps:
 
 **Steps**
 1. Clone the repository:
-     git clone https://github.com/Ahmed0Tawfik/Inventory-Management-System.git
+     git clone https://github.com/Ahmed0Tawfik/Inventory_Management_System.git
 2. Navigate to the project folder:
      cd Inventory-Management-System
 3. Install dependencies:
