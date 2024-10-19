@@ -40,9 +40,9 @@ To run this project locally, follow these steps:
      - The file (libwkhtmltox.dll) must be existed in the following path in the project folder (Inventory_Management_System\Inventory\bin\Debug\net8.0), so that the feature of generating PDF reports can work properly, you can download this file from the following link, choose 64 bit or 32 bit according to your system:
          - https://github.com/rdvojmoc/DinkToPdf/tree/master/v0.12.4
 5. Run the following command to apply migrations:
-     Update-Database
+     - Update-Database
 6. Run the application:
-     dotnet run
+     - dotnet run
 
 # Usage
 **Admin Features:**
