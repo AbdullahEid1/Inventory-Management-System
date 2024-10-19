@@ -12,6 +12,9 @@ using Models;
 using System.Drawing.Printing;
 using System.Linq;
 using System.Threading.Tasks;
+using OfficeOpenXml.Style;
+using System.Drawing;
+using System.Composition;
 
 namespace Inventory.Controllers
 {
@@ -318,23 +321,25 @@ namespace Inventory.Controllers
         }
 
 
+        //Get: Product/GeneratePDFReport
         [Authorize(Roles = "Admin")]
-        [HttpGet]
         public IActionResult GeneratePDFReport()
         {
             var products = _context.Product
                 .Include(p => p.Category)
                 .Include(p => p.Supplier)
-                .ToList();
+            .ToList();
 
-            var htmlContent = $"<p>Date: {DateTime.Now.ToString("yyyy-MM-dd")}</p>";
+            var htmlContent = "<h1>Inventory Report</h1>";
+
+            htmlContent += $"<p>Date: {DateTime.Now.ToString("yyyy-MM-dd")}</p>";
             htmlContent += $"<p>Time: {DateTime.Now.ToString("HH:mm:ss")}</p>";
 
-            htmlContent += "<h1>Inventory Report</h1><table border='1'><thead><tr><th>Product Name</th><th>Stock Quantity</th><th>Price</th><th>Category</th><th>Supplier</th></tr></thead><tbody>";
+            htmlContent += "<table border='1'><thead><tr><th>Product Name</th><th>Category</th><th>Supplier</th><th>Price (EGP)</th><th>Stock Quantity</th></tr></thead><tbody>";
 
             foreach (var product in products)
             {
-                htmlContent += $"<tr><td>{product.ProductName}</td><td>{product.StockQuantity}</td><td>{product.Price}</td><td>{product.Category.CategoryName}</td><td>{product.Supplier.SupplierName}</td></tr>";
+                htmlContent += $"<tr><td>{product.ProductName}</td><td>{product.Category.CategoryName}</td><td>{product.Supplier.SupplierName}</td><td>{product.Price}</td><td>{product.StockQuantity}</td></tr>";
             }
 
             htmlContent += "</tbody></table>";
@@ -361,8 +366,107 @@ namespace Inventory.Controllers
             };
 
             byte[] pdf = _pdfConverter.Convert(doc);
-            return File(pdf, "application/pdf", "InventoryReport.pdf");
+            return File(pdf, "application/pdf", "Inventory Report.pdf");
         }
 
+
+        //Get: Product/GenerateExcelReport
+        public async Task<IActionResult> GenerateExcelReport()
+        {
+            var products = await _context.Product
+                .Include(p => p.Category)
+                .Include(p => p.Supplier)
+                .ToListAsync();
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Inventory Report");
+
+                // Set the title
+                var titleCells = worksheet.Cells[1, 1, 1, 5];
+                titleCells.Merge = true;
+                titleCells.Value = "Inventory Report";
+                titleCells.Style.Font.Bold = true;
+                titleCells.Style.Font.Size = 22;
+                titleCells.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                titleCells.Style.Fill.BackgroundColor.SetColor(Color.AliceBlue);
+                titleCells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                // Include the current date and time
+                worksheet.Cells[2, 1].Value = $"Date: {DateTime.Now.ToString("yyyy-MM-dd")}";
+                worksheet.Cells[2, 1].Style.Font.Bold = true;
+                worksheet.Cells[2, 2].Value = $"Time: {DateTime.Now.ToString("HH:mm:ss")}";
+                worksheet.Cells[2, 2].Style.Font.Bold = true;
+
+                // Set headers
+                worksheet.Cells[4, 1].Value = "Product Name";
+                worksheet.Cells[4, 2].Value = "Category";
+                worksheet.Cells[4, 3].Value = "Supplier";
+                worksheet.Cells[4, 4].Value = "Price (EGP)";
+                worksheet.Cells[4, 5].Value = "Stock Quantity";
+
+                // Set the header style
+                using (var range = worksheet.Cells[4, 1, 4, 5])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                    range.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                }
+
+                // Fill data
+                for (int i = 0; i < products.Count; i++)
+                {
+                    var product = products[i];
+                    worksheet.Cells[i + 5, 1].Value = product.ProductName;
+                    worksheet.Cells[i + 5, 2].Value = product.Category.CategoryName;
+                    worksheet.Cells[i + 5, 3].Value = product.Supplier.SupplierName;
+                    worksheet.Cells[i + 5, 4].Value = product.Price;
+                    if (product.StockQuantity == 0)
+                    {
+                        worksheet.Cells[i + 5, 5].Value = product.StockQuantity + " (out of Stock!)";
+                        worksheet.Cells[i + 5, 5].Style.Font.Bold = true;
+                        worksheet.Cells[i + 5, 1, i + 5, 5].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        worksheet.Cells[i + 5, 1, i + 5, 5].Style.Font.Color.SetColor(Color.White);
+                        worksheet.Cells[i + 5, 1, i + 5, 5].Style.Fill.BackgroundColor.SetColor(Color.Red);
+                    }
+                    else if(product.StockQuantity < product.LowStockThreshold && product.StockQuantity > 0)
+                    {
+                        worksheet.Cells[i + 5, 5].Value = product.StockQuantity + " (Low Stock!)";
+                        worksheet.Cells[i + 5, 5].Style.Font.Bold = true;
+                        worksheet.Cells[i + 5, 1, i + 5, 5].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        worksheet.Cells[i + 5, 1, i + 5, 5].Style.Font.Color.SetColor(Color.White);
+                        worksheet.Cells[i + 5, 1, i + 5, 5].Style.Fill.BackgroundColor.SetColor(Color.Orange);
+                    }
+                    else
+                    {
+                        worksheet.Cells[i + 5, 5].Value = product.StockQuantity;
+                    }
+                    worksheet.Cells[i + 5, 1, i + 5, 5].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                }
+
+                // Total Stock Value
+                worksheet.Cells[products.Count + 6, 1, products.Count + 6, 3].Merge = true;
+                worksheet.Cells[products.Count + 6, 1, products.Count + 6, 3].Value = "Total Stock Value =";
+                worksheet.Cells[products.Count + 6, 4, products.Count + 6, 5].Merge = true;
+                worksheet.Cells[products.Count + 6, 4, products.Count + 6, 5].Value = _context.Product.Sum(p => p.StockQuantity * p.Price).ToString("F2") + " (EGP)";
+
+                var TotalStockValueCells = worksheet.Cells[products.Count + 6, 1, products.Count + 6, 5];
+                TotalStockValueCells.Style.Fill.PatternType = ExcelFillStyle.Solid;
+                TotalStockValueCells.Style.Font.Size = 12;
+                TotalStockValueCells.Style.Font.Bold = true;
+                TotalStockValueCells.Style.Fill.BackgroundColor.SetColor(Color.DarkBlue);
+                TotalStockValueCells.Style.Font.Color.SetColor(Color.White);
+                TotalStockValueCells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+                // Auto-fit columns
+                worksheet.Cells.AutoFitColumns();
+
+                // Return the Excel file as a downloadable file
+                var excelFile = package.GetAsByteArray();
+                return File(excelFile, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Inventory Report.xlsx");
+            }
+        }
     }
 }

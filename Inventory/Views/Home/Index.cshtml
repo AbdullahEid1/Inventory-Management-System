@@ -29,16 +29,102 @@
                 </div>
             </div>
 
-            <!-- Low Stock Alert -->
-            @if (Model.LowStockProducts.Any(product => product.StockQuantity < product.LowStockThreshold))
+            <!-- Notification Section -->
+            @if (Model.LowStockProducts.Any(product => product.StockQuantity == 0))
             {
-                <div class="alert alert-warning">
-                    <strong>Low Stock Alert!</strong> Some products are below their stock threshold. Please review the list.
+                <div class="alert alert-danger">
+                    <strong>Out of Stock Alert!</strong> Some products are out of stock. Please review the product list.
                 </div>
             }
+            else if (Model.LowStockProducts.Any(product => product.StockQuantity < product.LowStockThreshold && product.StockQuantity > 0))
+            {
+                <div class="alert alert-warning">
+                    <strong>Low Stock Alert!</strong> Some products are below their stock threshold. Please review the product list.
+                </div>
+            }
+            
+            <!-- Out of Stock Products Table -->
+            <div class="card shadow-lg border-0 mt-3">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0">Out of Stock Products</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover text-center">
+                        <thead class="table-success">
+                            <tr>
+                                <th>Product</th>
+                                <th>Category</th>
+                                <th>Supplier</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <th>Add Quantity</th>
+                                }
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var product in Model.LowStockProducts)
+                            {
+                                if (product.StockQuantity == 0)
+                                {
+                                    <tr>
+                                        <td>@product.ProductName</td>
+                                        <td>@product.Category.CategoryName</td>
+                                        <td>@product.Supplier.SupplierName</td>
+                                        <td>@product.Price</td>
+                                        <td>@product.StockQuantity</td>
+                                        @if (User.Identity.IsAuthenticated)
+                                        {
+                                            <td>
+                                                <form asp-action="AddQuantity" asp-controller="Product" asp-route-id="@product.ProductID">
+                                                    <div class="input-group">
+                                                        <input name="Quantity" type="number" value="1" class="form-control" aria-label="Quantity" min="1" />
+                                                        <button type="submit" class="px-2 btn btn-outline-success btn-sm">
+                                                            <i class="fas fa-plus"></i> Add
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </td>
+                                        }
+                                        <td>
+                                            <div class="dropdown">
+                                                <button class="btn btn-outline-danger btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Actions
+                                                </button>
+                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <li>
+                                                        <a class="dropdown-item" asp-action="Details" asp-controller="Product" asp-route-id="@product.ProductID">
+                                                            <i class="fas fa-info-circle"></i> Details
+                                                        </a>
+                                                    </li>
+                                                    @if (User.IsInRole("Admin"))
+                                                    {
+                                                        <li>
+                                                            <a class="dropdown-item" asp-action="Edit" asp-controller="Product" asp-route-id="@product.ProductID">
+                                                                <i class="fas fa-edit"></i> Edit
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item" asp-action="Delete" asp-controller="Product" asp-route-id="@product.ProductID">
+                                                                <i class="fas fa-trash-alt"></i> Delete
+                                                            </a>
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
             <!-- Low Stock Products Table -->
-            <div class="card shadow-lg border-0">
+            <div class="card shadow-lg border-0 mt-4">
                 <div class="card-header bg-white">
                     <h5 class="mb-0">Low Stock Products</h5>
                 </div>
@@ -61,58 +147,62 @@
                         <tbody>
                             @foreach (var product in Model.LowStockProducts)
                             {
-                                <tr>
-                                    <td>@product.ProductName</td>
-                                    <td>@product.Category.CategoryName</td>
-                                    <td>@product.Supplier.SupplierName</td>
-                                    <td>@product.Price</td>
-                                    <td>@product.StockQuantity</td>
-                                    @if (User.Identity.IsAuthenticated)
-                                    {
+                                if (product.StockQuantity < product.LowStockThreshold && product.StockQuantity > 0)
+                                {
+                                    <tr>
+                                        <td>@product.ProductName</td>
+                                        <td>@product.Category.CategoryName</td>
+                                        <td>@product.Supplier.SupplierName</td>
+                                        <td>@product.Price</td>
+                                        <td>@product.StockQuantity</td>
+                                        @if (User.Identity.IsAuthenticated)
+                                        {
+                                            <td>
+                                                <form asp-action="AddQuantity" asp-controller="Product" asp-route-id="@product.ProductID">
+                                                    <div class="input-group">
+                                                        <input name="Quantity" type="number" value="1" class="form-control" aria-label="Quantity" min="1" />
+                                                        <button type="submit" class="px-2 btn btn-outline-success btn-sm">
+                                                            <i class="fas fa-plus"></i> Add
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </td>
+                                        }
                                         <td>
-                                            <form asp-action="AddQuantity" asp-controller="Product" asp-route-id="@product.ProductID">
-                                                <div class="input-group">
-                                                    <input name="Quantity" type="number" value="1" class="form-control" aria-label="Quantity" min="1" />
-                                                    <button type="submit" class="px-2 btn btn-outline-success btn-sm">
-                                                        <i class="fas fa-plus"></i>
-                                                    </button>
-                                                </div>
-                                            </form>
+                                            <div class="dropdown">
+                                                <button class="btn btn-outline-danger btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Actions
+                                                </button>
+                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <li>
+                                                        <a class="dropdown-item" asp-action="Details" asp-controller="Product" asp-route-id="@product.ProductID">
+                                                            <i class="fas fa-info-circle"></i> Details
+                                                        </a>
+                                                    </li>
+                                                    @if (User.IsInRole("Admin"))
+                                                    {
+                                                        <li>
+                                                            <a class="dropdown-item" asp-action="Edit" asp-controller="Product" asp-route-id="@product.ProductID">
+                                                                <i class="fas fa-edit"></i> Edit
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item" asp-action="Delete" asp-controller="Product" asp-route-id="@product.ProductID">
+                                                                <i class="fas fa-trash-alt"></i> Delete
+                                                            </a>
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            </div>
                                         </td>
-                                    }
-                                    <td>
-                                        <div class="dropdown">
-                                            <button class="btn btn-outline-danger btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                                Actions
-                                            </button>
-                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <li>
-                                                    <a class="dropdown-item" asp-action="Details" asp-controller="Product" asp-route-id="@product.ProductID">
-                                                        <i class="fas fa-info-circle"></i> Details
-                                                    </a>
-                                                </li>
-                                                @if (User.IsInRole("Admin"))
-                                                {
-                                                    <li>
-                                                        <a class="dropdown-item" asp-action="Edit" asp-controller="Product" asp-route-id="@product.ProductID">
-                                                            <i class="fas fa-edit"></i> Edit
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" asp-action="Delete" asp-controller="Product" asp-route-id="@product.ProductID">
-                                                            <i class="fas fa-trash-alt"></i> Delete
-                                                        </a>
-                                                    </li>
-                                                }
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
+                                    </tr>
+                                }
                             }
                         </tbody>
                     </table>
                 </div>
             </div>
+
         </div>
 
         <!-- Sidebar Stats Section -->
@@ -129,27 +219,20 @@
                         </div>
                     </div>
                 }
-                <div class="col-md-6 mb-3">
-                    <div class="card shadow-lg card-stat">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Total Users</h5>
-                            <h4>@Model.TotalUsers</h4>
-                            @if (User.IsInRole("Admin"))
-                            {
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <div class="col-md-6 mb-3">
+                        <div class="card shadow-lg card-stat">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">Total Users</h5>
+                                <h4>@Model.TotalUsers</h4>
                                 <a asp-action="ShowUsers" class="btn btn-outline-dark">Show Users</a>
-                            }
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <div class="card shadow-lg card-stat">
-                        <div class="card-body text-center">
-                            <h5 class="card-title">Total Categories</h5>
-                            <h4>@Model.TotalCategories</h4>
-                            <a asp-action="Index" asp-controller="Category" class="btn btn-outline-danger">Show Categories</a>
-                        </div>
-                    </div>
-                </div>
+                }
+                
                 <div class="col-md-6 mb-3">
                     <div class="card shadow-lg card-stat">
                         <div class="card-body text-center">
@@ -159,6 +242,17 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-lg card-stat">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Total Categories</h5>
+                            <h4>@Model.TotalCategories</h4>
+                            <a asp-action="Index" asp-controller="Category" class="btn btn-outline-danger">Show Categories</a>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="col-md-6 mb-3">
                     <div class="card shadow-lg card-stat">
                         <div class="card-body text-center">

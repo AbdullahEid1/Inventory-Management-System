@@ -15,7 +15,13 @@
 
    
             <!-- Notification Section -->
-            @if (Model.Products.Any(product => product.StockQuantity < product.LowStockThreshold))
+            @if (Model.Products.Any(product => product.StockQuantity == 0))
+            {
+                <div class="alert alert-danger">
+                    <strong>Out of Stock Alert!</strong> Some products are out of stock. Please review the product list.
+                </div>
+            }
+            else if (Model.Products.Any(product => product.StockQuantity < product.LowStockThreshold && product.StockQuantity > 0))
             {
                 <div class="alert alert-warning">
                     <strong>Low Stock Alert!</strong> Some products are below their stock threshold. Please review the product list.
@@ -62,6 +68,9 @@
                             <a class="dropdown-item" asp-action="GeneratePDFReport">
                                 <i class="fas fa-trash-alt"></i> PDF File
                             </a>
+                            <a class="dropdown-item" asp-action="GenerateExcelReport">
+                                <i class="fas fa-trash-alt"></i> Excel File
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -93,7 +102,16 @@
                         @foreach (var product in Model.Products)
                         {
                             // Check if the product is below its low stock threshold
-                            var rowClass = product.StockQuantity < product.LowStockThreshold ? "table-warning" : ""; // Add warning class
+                            var rowClass = ""; // Add warning class
+                            
+                            @if (product.StockQuantity == 0)
+                            {
+                                rowClass = "table-danger";
+                            }
+                            else if (product.StockQuantity < product.LowStockThreshold && product.StockQuantity > 0)
+                            {
+                                rowClass = "table-warning";
+                            }
 
                             <tr  class="@rowClass">
                                 <td>@product.ProductName</td>
@@ -101,9 +119,13 @@
                                 <td>@product.Supplier?.SupplierName</td>
                                 <td>@product.Price</td>
                                 <td>@product.StockQuantity
-                                @if (product.StockQuantity < product.LowStockThreshold)
+                                @if (product.StockQuantity == 0)
                                 {
-                                    <span class="text-danger text-lg-start"> - Low Stock!</span>
+                                    <span class="text-white text-lg-start"> (Out of Stock!)</span>
+                                }
+                                else if (product.StockQuantity < product.LowStockThreshold && product.StockQuantity > 0)
+                                {
+                                    <span class="text-white text-lg-start"> (Low Stock!)</span>
                                 }
                                 </td>
                                 <td>
@@ -118,9 +140,17 @@
                                 </td>
                                 <td>
                                     <div class="dropdown">
-                                        <button class="btn btn-outline-danger btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Actions
-                                        </button>
+                                        @if (product.StockQuantity < product.LowStockThreshold)
+                                        {
+                                            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Actions
+                                            </button>
+                                        }
+                                        else{
+                                            <button class="btn btn-outline-danger btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Actions
+                                            </button>
+                                        }
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <li>
                                                 <a class="dropdown-item" asp-action="Details" asp-route-id="@product.ProductID">
