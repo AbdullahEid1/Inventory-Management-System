@@ -1,5 +1,5 @@
 # Inventory Management System
-**Final Project for Digital Egypt Pioneers Initiative (.NET Web Developer Track)**
+**Final Project for the Digital Egypt Pioneers Initiative (DEPI) - .NET Web Developer Track**
 
 # Overview
 This Inventory Management System is a comprehensive web-based solution developed using the latest technologies in the .NET ecosystem. The project was created as part of the Digital Egypt Pioneers Initiative (DEPI) final submission for the .NET Web Developer Track. The system is designed to manage products, categories, suppliers, and stock levels efficiently, providing real-time insights into inventory status, with features for reporting and stock value calculations.
