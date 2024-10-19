@@ -29,16 +29,16 @@ To run this project locally, follow these steps:
 * Git
 
 **Steps**
-1. Clone the repository: \n
-     git clone https://github.com/Ahmed0Tawfik/Inventory_Management_System.git
+1. Clone the repository:
+     - git clone https://github.com/Ahmed0Tawfik/Inventory_Management_System.git
 2. Navigate to the project folder:
-     cd Inventory-Management-System
+     - cd Inventory-Management-System
 3. Install dependencies:
      - In the root directory, open the NuGet Package Manager Console and install the necessary packages:
-         Install-Package DinkToPdf
-         Install-Package EPPlus
+         - Install-Package DinkToPdf
+         - Install-Package EPPlus
      - The file (libwkhtmltox.dll) must be existed in the following path in the project folder, so that the feature of generating PDF reports can work properly:
-         Inventory_Management_System\Inventory\bin\Debug\net8.0
+         - Inventory_Management_System\Inventory\bin\Debug\net8.0
 5. Run the following command to apply migrations:
      Update-Database
 6. Run the application:
