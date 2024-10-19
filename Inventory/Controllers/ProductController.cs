@@ -330,7 +330,127 @@ namespace Inventory.Controllers
                 .Include(p => p.Supplier)
             .ToList();
 
-            var htmlContent = "<h1>Inventory Report</h1>";
+
+            // ---------------------- Enhanced PDF report ----------------------------- //
+
+            var tableRows = "";
+            var totalStockValue = products.Sum(p => p.Price * p.StockQuantity).ToString("F2");
+
+            foreach (var product in products)
+            {
+                string rowColor = "";
+                var lowStockThreshold = product.LowStockThreshold;
+                string stockDisplay = product.StockQuantity.ToString();
+
+                // Apply conditions for low stock and out of stock
+                if (product.StockQuantity == 0)
+                {
+                    stockDisplay += " (Out of Stock)";
+                    rowColor = "style='background-color: red; color: white;'";
+                }
+                else if (product.StockQuantity < lowStockThreshold)
+                {
+                    stockDisplay += " (Low Stock)";
+                    rowColor = "style='background-color: orange;'";
+                }
+
+                // Append the product row to the tableRows
+                tableRows += $@"
+                <tr {rowColor}>
+                    <td>{product.ProductName}</td>
+                    <td>{product.Category.CategoryName}</td>
+                    <td>{product.Supplier.SupplierName}</td>
+                    <td>{product.Price}</td>
+                    <td>{stockDisplay}</td>
+                </tr>";
+            }
+
+            // After generating the rows, you can create the rest of the HTML as previously shown
+            var htmlContent = $@"
+            <!DOCTYPE html>
+            <html lang='en'>
+            <head>
+                <meta charset='UTF-8'>
+                <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+                <title>Inventory Report</title>
+                <style>
+                    body {{
+                        font-family: Arial, sans-serif;
+                        margin: 20px;
+                    }}
+                    h1 {{
+                        text-align: center;
+                        color: #333;
+                    }}
+                    table {{
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-top: 20px;
+                        box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+                    }}
+                    table, th, td {{
+                        border: 1px solid #ddd;
+                    }}
+                    th {{
+                        background-color: #4CAF50;
+                        color: white;
+                        padding: 10px;
+                    }}
+                    td {{
+                        padding: 10px;
+                        text-align: center;
+                    }}
+                    .report-date {{
+                        text-align: left;
+                        margin-top: 20px;
+                        color: #555;
+                    }}
+                    .footer {{
+                        text-align: center;
+                        margin-top: 40px;
+                        font-size: 12px;
+                        color: #999;
+                    }}
+                    .total-row {{
+                        background-color: #f2f2f2;
+                        font-weight: bold;
+                    }}
+                </style>
+            </head>
+            <body>
+                <h1>Inventory Report</h1>
+                <div class='report-date'>
+                    Date: {DateTime.Now.ToString("yyyy-MM-dd")} <br>
+                    Time: {DateTime.Now.ToString("HH:mm:ss")}
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Category</th>
+                            <th>Supplier</th>
+                            <th>Price (EGP)</th>
+                            <th>Stock Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {tableRows}
+                        <tr class='total-row'>
+                            <td colspan='3'>Total Stock Value</td> <!-- Spans the first three columns -->
+                            <td colspan='2'>{totalStockValue} (EGP)</td> <!-- Spans the last two columns -->
+                        </tr>
+                    </tbody>
+                </table>
+                <div class='footer'>
+                    Inventory Management System - Report
+                </div>
+            </body>
+            </html>";
+
+
+            // ---------------------- Basic PDF report ----------------------------- //
+
+            /*var htmlContent = "<h1>Inventory Report</h1>";
 
             htmlContent += $"<p>Date: {DateTime.Now.ToString("yyyy-MM-dd")}</p>";
             htmlContent += $"<p>Time: {DateTime.Now.ToString("HH:mm:ss")}</p>";
@@ -342,9 +462,11 @@ namespace Inventory.Controllers
                 htmlContent += $"<tr><td>{product.ProductName}</td><td>{product.Category.CategoryName}</td><td>{product.Supplier.SupplierName}</td><td>{product.Price}</td><td>{product.StockQuantity}</td></tr>";
             }
 
-            htmlContent += "</tbody></table>";
+            htmlContent += "</tbody></table>";*/
 
-            var converter = new BasicConverter(new PdfTools());
+            // -------------------------------------------------------------------- //
+
+            var converter = new SynchronizedConverter(new PdfTools());
             var doc = new HtmlToPdfDocument()
             {
                 GlobalSettings = {
@@ -360,7 +482,7 @@ namespace Inventory.Controllers
                         PagesCount = true,
                         HtmlContent = htmlContent,
                         WebSettings = { DefaultEncoding = "utf-8" },
-                        FooterSettings = { FontSize = 8, Right = "Page [page] of [toPage]" }
+                        FooterSettings = { FontSize = 9, Center = "Page [page] of [toPage]", Line = true }
                     }
                 }
             };
