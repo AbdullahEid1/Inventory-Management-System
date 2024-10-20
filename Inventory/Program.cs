@@ -24,12 +24,13 @@ namespace Inventory
                     option.Password.RequireDigit = false;
                     option.Password.RequireNonAlphanumeric = false;
                     option.Password.RequiredLength = 8;
-                })
+                }
+            )
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             builder.Services.AddDbContext<ApplicationDbContext>(
                 (options) => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-                );
+            );
 
            
             // Add services to the container.

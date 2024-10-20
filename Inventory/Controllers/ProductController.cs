@@ -225,6 +225,8 @@ namespace Inventory.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
+        //Get: Product/ProductExists
         private bool ProductExists(int id)
         {
             return _context.Product.Any(e => e.ProductID == id);

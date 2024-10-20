@@ -47,7 +47,7 @@ namespace Inventory.Controllers
         }
 
 
-        public async Task<IActionResult> ShowUsers()
+        /*public async Task<IActionResult> ShowUsers()
         {
             var users = await _userManager.Users.ToListAsync();
             var userViewModels = new List<UserViewModel>();
@@ -74,6 +74,6 @@ namespace Inventory.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        }*/
     }
 }
