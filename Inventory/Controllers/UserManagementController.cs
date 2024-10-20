@@ -112,6 +112,7 @@ namespace Inventory.Controllers
 
             // If we got this far, something failed; redisplay the form.
             model.AvailableRoles = await _roleManager.Roles.Select(r => r.Name).ToListAsync(); // Re-populate available roles
+            TempData["fail"] = "Invalid Input";
             return View(model);
         }
 
