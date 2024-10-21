@@ -34,16 +34,27 @@
                                 Actions
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <li>
-                                    <a class="dropdown-item" asp-action="EditUser" asp-route-id="@user.userid">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" asp-action="DeleteUser" asp-route-id="@user.userid">
-                                        <i class="fas fa-trash-alt"></i> Delete
-                                    </a>
-                                </li>
+                                @if(user.Username == "Admin")
+                                {
+                                    <li>
+                                        <a class="dropdown-item" asp-action="EditUser" asp-route-id="@user.userid">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li>
+                                        <a class="dropdown-item" asp-action="EditUser" asp-route-id="@user.userid">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-action="DeleteUser" asp-route-id="@user.userid">
+                                            <i class="fas fa-trash-alt"></i> Delete
+                                        </a>
+                                    </li>
+                                }
                             </ul>
                         </div>
                     </td>
