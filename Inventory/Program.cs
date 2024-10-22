@@ -84,7 +84,7 @@ namespace Inventory
 
             // Seed an admin user if it doesn't already exist
             var adminUserName = "Admin";
-            var adminEmail = "admin@yourapp.com";
+            var adminEmail = "admin@gmail.com";
             var adminUser = await userManager.FindByNameAsync(adminUserName);
 
             if (adminUser == null)
