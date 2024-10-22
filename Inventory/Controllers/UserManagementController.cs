@@ -167,6 +167,33 @@ namespace Inventory.Controllers
                 return NotFound();
             }
 
+            // Check if the user has an Admin role
+            var roles = await _userManager.GetRolesAsync(user);
+            if (roles.Contains("Admin"))
+            {
+                // Get the number of users with the Admin role
+                var adminUsers = await _userManager.GetUsersInRoleAsync("Admin");
+
+                // If there is only one Admin, prevent deletion
+                if (adminUsers.Count == 1)
+                {
+                    ModelState.AddModelError(string.Empty, "Sorry! there must be at least one Admin in the system. Please assign another user as Admin before deleting.");
+
+                    // Return the user details to the DeleteUser confirmation view with an error message
+                    var model = new DeleteUserViewModel
+                    {
+                        Id = user.Id,
+                        Username = user.UserName,
+                        Email = user.Email,
+                        FirstName = user.FName,
+                        LastName = user.LName,
+                        PhoneNumber = user.PhoneNumber,
+                        Roles = string.Join(", ", roles)
+                    };
+                    return View("DeleteUser", model); // Re-display the confirmation view with error
+                }
+            }
+
             var result = await _userManager.DeleteAsync(user);
             if (result.Succeeded)
             {
@@ -180,8 +207,8 @@ namespace Inventory.Controllers
                 ModelState.AddModelError("", error.Description);
             }
 
-            var roles = await _userManager.GetRolesAsync(user);
-            var model = new DeleteUserViewModel
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var returnModel = new DeleteUserViewModel
             {
                 Id = user.Id,
                 Username = user.UserName,
@@ -189,10 +216,10 @@ namespace Inventory.Controllers
                 FirstName = user.FName,
                 LastName = user.LName,
                 PhoneNumber = user.PhoneNumber,
-                Roles = string.Join(", ", roles)
+                Roles = string.Join(", ", userRoles)
             };
 
-            return View("DeleteUser", model);
+            return View("DeleteUser", returnModel);
         }
     }
 }

@@ -9,7 +9,40 @@
 <div class="container">
     <h4>UserName: @Model.UserName</h4>
     <form asp-action="EditUser" method="post">
-        @if(Model.UserName == "Admin")
+        <input type="hidden" asp-for="Id" />
+
+        <div class="form-group">
+            <input type="hidden" asp-for="UserName" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="FirstName"></label>
+            <input asp-for="FirstName" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="LastName"></label>
+            <input asp-for="LastName" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="PhoneNumber"></label>
+            <input asp-for="PhoneNumber" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="SelectedRole">Select Role</label>
+            <select asp-for="SelectedRole" class="form-control" asp-items="@(new SelectList(Model.AvailableRoles))">
+                <option value="">-- Select Role --</option> <!-- Optional: Placeholder -->
+            </select>
+        </div>
+
+        @* @if(Model.UserName == "Admin")
         {
             <input type="hidden" asp-for="Id" />
 
@@ -71,7 +104,7 @@
                     <option value="">-- Select Role --</option> <!-- Optional: Placeholder -->
                 </select>
             </div>
-        }
+        } *@
 
         <button type="submit" class="btn btn-outline-success mt-3">Save Changes</button>
         <a asp-action="ShowUsers" class="btn btn-outline-danger mt-3">Cancel</a>

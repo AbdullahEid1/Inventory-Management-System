@@ -6,6 +6,26 @@
 <div class="container">
     <h3 class="text-center mt-2">Delete User</h3>
 
+    @* @if (ViewData.ModelState.Count > 0)
+    {
+        <div class="alert alert-danger">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <p>@error.ErrorMessage</p>
+            }
+        </div>
+    } *@
+
+    @if (ViewData.ModelState.Any(ms => ms.Value.Errors.Count > 0))
+    {
+        <div class="alert alert-danger">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <p>@error.ErrorMessage</p>
+            }
+        </div>
+    }
+
     <div class="alert alert-danger">
         <strong>Warning!</strong> Are You sure you want to delete this user?
     </div>
