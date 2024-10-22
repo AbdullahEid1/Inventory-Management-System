@@ -6,6 +6,16 @@
 
 <h3 class="text-center mt-2">Edit User</h3>
 
+@if (ViewData.ModelState.Any(ms => ms.Value.Errors.Count > 0))
+{
+    <div class="alert alert-danger">
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <p>@error.ErrorMessage</p>
+        }
+    </div>
+}
+
 <div class="container">
     <h4>UserName: @Model.UserName</h4>
     <form asp-action="EditUser" method="post">

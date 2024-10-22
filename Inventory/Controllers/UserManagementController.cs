@@ -87,31 +87,65 @@ namespace Inventory.Controllers
                     return NotFound();
                 }
 
+                // Get the current roles of the user
+                var currentRoles = await _userManager.GetRolesAsync(user);
+
+                // Check if the user is currently an admin
+                if (currentRoles.Contains("Admin"))
+                {
+                    // Get the number of admins
+                    var adminUsers = await _userManager.GetUsersInRoleAsync("Admin");
+
+                    // If there's only one admin and the new selected role is not Admin
+                    if (adminUsers.Count == 1 && model.SelectedRole != "Admin")
+                    {
+                        // Add an error message and return to the view
+                        ModelState.AddModelError(string.Empty, "Sorry! There must be at least one Admin in the system. Please assign another user as Admin before changing the role of this user.");
+                        model.AvailableRoles = await _roleManager.Roles.Select(r => r.Name).ToListAsync(); // Reload available roles
+                        return View(model);
+                    }
+                }
+
                 user.FName = model.FirstName;
                 user.LName = model.LastName;
                 user.Email = model.Email;
                 user.PhoneNumber = model.PhoneNumber;
 
-                // Update the user's role
-                var currentRoles = await _userManager.GetRolesAsync(user);
-
-                // Remove the user from current roles and add the new role
-                if (currentRoles.Any())
+                // Remove the user from their current roles
+                var removeRolesResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
+                if (!removeRolesResult.Succeeded)
                 {
-                    await _userManager.RemoveFromRolesAsync(user, currentRoles);
-                }
-                if (!string.IsNullOrEmpty(model.SelectedRole))
-                {
-                    await _userManager.AddToRoleAsync(user, model.SelectedRole);
+                    ModelState.AddModelError(string.Empty, "Error occurred while removing user roles.");
+                    model.AvailableRoles = await _roleManager.Roles.Select(r => r.Name).ToListAsync(); // Reload available roles
+                    return View(model);
                 }
 
-                await _userManager.UpdateAsync(user);
-                TempData["success"] = "User Updated Successfully";
-                return RedirectToAction("ShowUsers");
+                // Assign the user to the newly selected role
+                var addRoleResult = await _userManager.AddToRoleAsync(user, model.SelectedRole);
+                if (!addRoleResult.Succeeded)
+                {
+                    ModelState.AddModelError(string.Empty, "Error occurred while assigning user roles.");
+                    model.AvailableRoles = await _roleManager.Roles.Select(r => r.Name).ToListAsync(); // Reload available roles
+                    return View(model);
+                }
+
+                // Update the user's other details if necessary
+                var updateResult = await _userManager.UpdateAsync(user);
+                if (updateResult.Succeeded)
+                {
+                    TempData["success"] = "User Updated Successfully";
+                    return RedirectToAction("ShowUsers");
+                }
+
+                // Add any errors to the model state
+                foreach (var error in updateResult.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
             }
 
             // If we got this far, something failed; redisplay the form.
-            model.AvailableRoles = await _roleManager.Roles.Select(r => r.Name).ToListAsync(); // Re-populate available roles
+            model.AvailableRoles = await _roleManager.Roles.Select(r => r.Name).ToListAsync(); // Reload available roles
             TempData["fail"] = "Invalid Input";
             return View(model);
         }
@@ -177,7 +211,7 @@ namespace Inventory.Controllers
                 // If there is only one Admin, prevent deletion
                 if (adminUsers.Count == 1)
                 {
-                    ModelState.AddModelError(string.Empty, "Sorry! there must be at least one Admin in the system. Please assign another user as Admin before deleting.");
+                    ModelState.AddModelError(string.Empty, "Sorry! There must be at least one Admin in the system. Please assign another user as Admin before deleting.");
 
                     // Return the user details to the DeleteUser confirmation view with an error message
                     var model = new DeleteUserViewModel
