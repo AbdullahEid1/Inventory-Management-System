@@ -449,25 +449,6 @@ namespace Inventory.Controllers
             </body>
             </html>";
 
-
-            // ---------------------- Basic PDF report ----------------------------- //
-
-            /*var htmlContent = "<h1>Inventory Report</h1>";
-
-            htmlContent += $"<p>Date: {DateTime.Now.ToString("yyyy-MM-dd")}</p>";
-            htmlContent += $"<p>Time: {DateTime.Now.ToString("HH:mm:ss")}</p>";
-
-            htmlContent += "<table border='1'><thead><tr><th>Product Name</th><th>Category</th><th>Supplier</th><th>Price (EGP)</th><th>Stock Quantity</th></tr></thead><tbody>";
-
-            foreach (var product in products)
-            {
-                htmlContent += $"<tr><td>{product.ProductName}</td><td>{product.Category.CategoryName}</td><td>{product.Supplier.SupplierName}</td><td>{product.Price}</td><td>{product.StockQuantity}</td></tr>";
-            }
-
-            htmlContent += "</tbody></table>";*/
-
-            // -------------------------------------------------------------------- //
-
             var converter = new SynchronizedConverter(new PdfTools());
             var doc = new HtmlToPdfDocument()
             {
