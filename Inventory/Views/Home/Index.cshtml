@@ -266,3 +266,241 @@
         </aside>
     </div>
 </div>
+
+
+@* ***************************************** Enhanced Dashboard **************************************** *@
+
+
+@* @{
+    ViewData["Title"] = "Dashboard";
+}
+
+<!-- Dashboard Container -->
+<div class="container-fluid">
+    <!-- Header -->
+    <header class="navbar navbar-expand-lg navbar-light bg-gradient-primary mb-4 shadow">
+        <a class="navbar-brand ms-3 text-white" href="#">Inventory Management</a>
+        <div class="ms-auto d-flex align-items-center">
+            <div class="input-group me-3">
+                <input type="text" class="form-control" placeholder="Search..." aria-label="Search">
+                <button class="btn btn-outline-light" type="button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            <div class="dropdown me-3">
+                <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuUser" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-user-circle"></i> Username
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuUser">
+                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                    <li><a class="dropdown-item" href="#">Settings</a></li>
+                    <li><a class="dropdown-item" href="#">Logout</a></li>
+                </ul>
+            </div>
+            <button class="btn btn-outline-light me-3">
+                <i class="fas fa-bell"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-2 d-none d-md-block bg-dark sidebar shadow-lg rounded">
+            <div class="position-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-white" href="#">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-white" href="#">
+                            <i class="fas fa-box"></i> Products
+                        </a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-white" href="#">
+                            <i class="fas fa-tags"></i> Categories
+                        </a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-white" href="#">
+                            <i class="fas fa-truck"></i> Suppliers
+                        </a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a class="nav-link text-white" href="#">
+                            <i class="fas fa-chart-line"></i> Reports
+                        </a>
+                    </li>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item mb-2">
+                            <a class="nav-link text-white" href="#">
+                                <i class="fas fa-users"></i> User Management
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="col-md-10 ms-sm-auto col-lg-10 px-md-4">
+            <!-- Overview Cards -->
+            <div class="row my-4">
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card shadow-lg rounded">
+                        <div class="card-body">
+                            <h6 class="card-title text-muted">Total Stock Value</h6>
+                            <h3 class="card-text">@Model.TotalStockValue.ToString("F2") (EGP)</h3>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-success"><i class="fas fa-arrow-up"></i> 5%</span>
+                                <i class="fas fa-coins fa-2x text-success"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card shadow-lg rounded">
+                        <div class="card-body">
+                            <h6 class="card-title text-muted">Total Products</h6>
+                            <h3 class="card-text">@Model.TotalProducts</h3>
+                            <a href="#" class="btn btn-outline-success mt-2"><i class="fas fa-box"></i> View Products</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card shadow-lg rounded">
+                        <div class="card-body">
+                            <h6 class="card-title text-muted">Total Categories</h6>
+                            <h3 class="card-text">@Model.TotalCategories</h3>
+                            <a href="#" class="btn btn-outline-danger mt-2"><i class="fas fa-tags"></i> View Categories</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card shadow-lg rounded">
+                        <div class="card-body">
+                            <h6 class="card-title text-muted">Total Suppliers</h6>
+                            <h3 class="card-text">@Model.TotalSupplires</h3>
+                            <a href="#" class="btn btn-outline-info mt-2"><i class="fas fa-truck"></i> View Suppliers</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Visualization -->
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div class="card shadow-lg">
+                        <div class="card-header">
+                            <h5 class="mb-0">Stock Levels by Category</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="barChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-4">
+                    <div class="card shadow-lg">
+                        <div class="card-header">
+                            <h5 class="mb-0">Product Distribution</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="pieChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table Section -->
+            <div class="card shadow-lg mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Product List</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Category</th>
+                                <th>Supplier</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var product in Model.LowStockProducts)
+                            {
+                                <tr>
+                                    <td>@product.ProductName</td>
+                                    <td>@product.Category.CategoryName</td>
+                                    <td>@product.Supplier.SupplierName</td>
+                                    <td>@product.Price</td>
+                                    <td>@product.StockQuantity</td>
+                                    <td>
+                                        <a href="#" class="btn btn-sm btn-primary">Details</a>
+                                        @if (User.IsInRole("Admin"))
+                                        {
+                                            <a href="#" class="btn btn-sm btn-warning">Edit</a>
+                                            <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-light text-center text-muted py-3 mt-4">
+    <div class="container">
+        <small>© 2024 Inventory Management System. All rights reserved.</small>
+    </div>
+</footer>
+
+<!-- JavaScript to render charts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Data for Bar Chart
+    var ctxBar = document.getElementById('barChart').getContext('2d');
+    var barChart = new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+            labels: ['Category 1', 'Category 2', 'Category 3', 'Category 4', 'Category 5'],
+            datasets: [{
+                label: 'Stock Levels',
+                data: [12, 19, 3, 5, 2],
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        }
+    });
+
+    // Data for Pie Chart
+    var ctxPie = document.getElementById('pieChart').getContext('2d');
+    var pieChart = new Chart(ctxPie, {
+        type: 'pie',
+        data: {
+            labels: ['Category 1', 'Category 2', 'Category 3', 'Category 4', 'Category 5'],
+            datasets: [{
+                data: [10, 20, 30, 25, 15],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.6)',
+                    'rgba(153, 102, 255, 0.6)',
+                    'rgba(255, 159, 64, 0.6)',
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)'
+                ]
+            }]
+        }
+    });
+</script>
+ *@
