@@ -1,75 +1,57 @@
 ﻿@model IEnumerable<UserViewModel>
 @{
-    ViewData["Title"] = "ShowUsers";
+    ViewData["Title"] = "Show Users";
 }
 
-<div class="card-header bg-white">
-    <h3 class="text-center mt-1">All Users</h3>
-</div>
-
-<div class="card-body">
-    <table class="table table-hover table-bordered mt-3 text-center">
-        <thead class="table-success">
-            <tr>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Name</th>
-                <th>Phone Number</th>
-                <th>Role</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var user in Model)
-            {
-                <tr>
-                    <td>@user.Username</td>
-                    <td>@user.Email</td>
-                    <td>@user.FirstName @user.LastName</td>
-                    <td>@user.PhoneNumber</td>
-                    <td>@user.Role</td> <!-- Displaying the roles -->
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn btn-outline-danger btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                Actions
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <li>
-                                    <a class="dropdown-item" asp-action="EditUser" asp-route-id="@user.userid">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" asp-action="DeleteUser" asp-route-id="@user.userid">
-                                        <i class="fas fa-trash-alt"></i> Delete
-                                    </a>
-                                </li>
-                                @* @if(user.Username == "Admin")
-                                {
-                                    <li>
-                                        <a class="dropdown-item" asp-action="EditUser" asp-route-id="@user.userid">
-                                            <i class="fas fa-edit"></i> Edit
-                                        </a>
-                                    </li>
-                                }
-                                else
-                                {
-                                    <li>
-                                        <a class="dropdown-item" asp-action="EditUser" asp-route-id="@user.userid">
-                                            <i class="fas fa-edit"></i> Edit
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" asp-action="DeleteUser" asp-route-id="@user.userid">
-                                            <i class="fas fa-trash-alt"></i> Delete
-                                        </a>
-                                    </li>
-                                } *@
-                            </ul>
-                        </div>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<div class="container my-5">
+    <div class="card border-0 shadow-lg">
+        <div class="card-header text-white" style="background: linear-gradient(to right, #4e54c8, #8b6cb0);">
+            <h3 class="text-center mt-1">All Users</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover table-bordered mt-3 text-center">
+                <thead class="table-success">
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Name</th>
+                        <th>Phone Number</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td>@user.Username</td>
+                            <td>@user.Email</td>
+                            <td>@user.FirstName @user.LastName</td>
+                            <td>@user.PhoneNumber</td>
+                            <td>@user.Role</td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-danger btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Actions
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <li>
+                                            <a class="dropdown-item" asp-action="EditUser" asp-route-id="@user.userid">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" asp-action="DeleteUser" asp-route-id="@user.userid">
+                                                <i class="fas fa-trash-alt"></i> Delete
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
