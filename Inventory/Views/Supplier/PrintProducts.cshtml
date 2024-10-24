@@ -4,40 +4,45 @@
     ViewBag.Title = "Products for @Model.SupplierName";
 }
 
-<div class="card-header bg-white">
-    <h3 class="text-center mt-1">Products for @Model.SupplierName</h3>
-</div>
+<div class="container my-5">
+    <div class="card border-0 shadow-lg">
+        <div class="card-header text-center" style="background: linear-gradient(to right, #4e54c8, #8b6cb0); color: white;">
+            <h3 class="mb-0">Products for @Model.SupplierName</h3>
+        </div>
 
-@if (Model.Products != null && Model.Products.Any())
-{
-    <table class="table table-hover table-bordered mt-3 text-center">
-        <thead class="table-success">
-            <tr>
-                
-                <th>Product Name</th>
-                <th>Stock Quantity</th>
-                <th>Price (EGP)</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var product in Model.Products)
+        <div class="card-body">
+            @if (Model.Products != null && Model.Products.Any())
             {
-                <tr>
-                     
-                    <td>@product.ProductName</td>
-                    <td>@product.StockQuantity</td>
-                    <td>@product.Price</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                <table class="table table-hover table-bordered mt-3 text-center">
+                    <thead class="table-success">
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Stock Quantity</th>
+                            <th>Price (EGP)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var product in Model.Products)
+                        {
+                            <tr>
+                                <td>@product.ProductName</td>
+                                <td>@product.StockQuantity</td>
+                                <td>@product.Price</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
 
-    @* <button onclick="window.print()" class="btn btn-outline-success">Print Products</button> *@
-    <a asp-action="Index" class="btn btn-outline-primary">Back to Suppliers</a>
-}
-else
-{
-    <div class="alert alert-info text-center">
-        No products available for this supplier.
+                <div class="d-flex justify-content-between mt-4">
+                    <a asp-action="Index" class="btn btn-outline-primary">Back to Suppliers</a>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info text-center mt-4">
+                    No products available for this Supplier.
+                </div>
+            }
+        </div>
     </div>
-}
+</div>
