@@ -1,4 +1,4 @@
-﻿@using Models
+﻿@* @using Models
 @model LoginViewModel
 
 @{
@@ -31,6 +31,62 @@
             <div class="text-center mt-2">
                 <a asp-action="Register" asp-controller="Account" class=" link-underline-opacity-0 text-dark  link-underline-opacity-50-hover">Dont Have An Account?</a>
 
+            </div>
+        </form>
+    </div>
+</div>
+
+ *@
+
+
+@* ********************************** Enhanced View ************************************ *@
+
+
+@using Models
+@model LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<!-- Container for the form with a modern design -->
+<div class="d-flex justify-content-center align-items-center min-vh-100 bg-light">
+    <div class="card shadow-lg p-4 w-50 border-0 rounded-4">
+        <h2 class="text-center mb-4 text-primary">Welcome Back!</h2>
+        <form asp-action="SaveLogin" class="p-3">
+            <!-- Validation summary for model errors -->
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <!-- Username input field -->
+            <div class="form-floating mb-4">
+                <input asp-for="UserName" class="form-control" id="floatingInput" placeholder="Username" autofocus>
+                <label for="floatingInput">Username</label>
+            </div>
+
+            <!-- Password input field -->
+            <div class="form-floating mb-4">
+                <input asp-for="Password" class="form-control" id="floatingPassword" placeholder="Password" type="password" autocomplete="off">
+                <label for="floatingPassword">Password</label>
+            </div>
+
+            <!-- Remember Me checkbox -->
+            <div class="form-check mb-3">
+                <input class="form-check-input" asp-for="RememberMe" id="rememberMeCheck">
+                <label class="form-check-label" for="rememberMeCheck">
+                    Remember Me
+                </label>
+            </div>
+
+            <!-- Login button -->
+            <div class="d-grid">
+                <button class="btn btn-info btn-lg" type="submit">Login</button>
+            </div>
+
+            <!-- Register link with hover effect -->
+            <div class="text-center mt-3">
+                <a asp-action="Register" asp-controller="Account" class="text-secondary text-decoration-none">
+                    Don't have an account? <span class="text-primary">Register here</span>
+                </a>
             </div>
         </form>
     </div>

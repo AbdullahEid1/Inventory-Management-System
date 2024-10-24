@@ -1,4 +1,4 @@
-﻿@using Models
+﻿@* @using Models
 @model RoleViewModel
 @{
     ViewData["Title"] = "Role";
@@ -21,8 +21,35 @@
             </div>
         </form>
     </div>
+</div> *@
+
+
+@* ********************************** Enhanced View ************************************ *@
+
+
+@using Models
+@model RoleViewModel
+@{
+    ViewData["Title"] = "Role";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="text-center mb-4">Create Role</h2>
+            <form asp-action="SaveRole">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                
+                <div class="form-floating mb-3">
+                    <input asp-for="RoleName" class="form-control" id="roleName" placeholder="Role name" required />
+                    <label for="roleName">Role Name</label>
+                    <span asp-validation-for="RoleName" class="text-danger"></span>
+                </div>
+                
+                <div class="d-flex justify-content-center">
+                    <input type="submit" value="Create" class="btn btn-outline-success btn-lg" />
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
-
-
-
-

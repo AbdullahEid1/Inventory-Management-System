@@ -1,4 +1,4 @@
-﻿@using Models
+﻿@* @using Models
 @model RegisterViewModel
 
 @{
@@ -91,7 +91,104 @@
         </form>
     </div>
 </div>
+ *@
 
 
+@* ******************************** Enhance Code **************************************
 
 
+ *@
+ @using Models
+@model RegisterViewModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<!-- Container for the registration form with a consistent design -->
+<div class="d-flex justify-content-center align-items-center min-vh-100 bg-light">
+    <div class="card shadow-lg p-5 w-75 border-0 rounded-4">
+        <h2 class="text-center mb-4 text-primary">Create Your Account</h2>
+        <form asp-action="SaveRegister">
+            <!-- Validation summary for model errors -->
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+
+            <!-- First row: First Name and Last Name -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input asp-for="FName" class="form-control" id="floatingFName" placeholder="First Name" required>
+                        <label for="floatingFName">First Name</label>
+                        <span asp-validation-for="FName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input asp-for="LName" class="form-control" id="floatingLName" placeholder="Last Name" required>
+                        <label for="floatingLName">Last Name</label>
+                        <span asp-validation-for="LName" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Second row: Username and Email -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input asp-for="UserName" class="form-control" id="floatingUserName" placeholder="Username" required>
+                        <label for="floatingUserName">Username</label>
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input asp-for="Email" class="form-control" id="floatingEmail" placeholder="Email" type="email" required>
+                        <label for="floatingEmail">Email</label>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Third row: Password and Confirm Password -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input asp-for="Password" class="form-control" id="floatingPassword" placeholder="Password" type="password" autocomplete="off" required>
+                        <label for="floatingPassword">Password</label>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input asp-for="ConfirmedPassword" class="form-control" id="floatingConfirmedPassword" placeholder="Confirm Password" type="password" autocomplete="off" required>
+                        <label for="floatingConfirmedPassword">Confirm Password</label>
+                        <span asp-validation-for="ConfirmedPassword" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fourth row: Phone Number -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input asp-for="PhoneNumber" class="form-control" id="floatingPhoneNumber" placeholder="Phone Number">
+                        <label for="floatingPhoneNumber">Phone Number</label>
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit button -->
+            <div class="d-grid">
+                <button class="btn btn-info btn-lg" type="submit">Create Account</button>
+            </div>
+
+            <!-- Link to Login page with hover effect -->
+            <div class="text-center mt-4">
+                <a asp-action="Login" asp-controller="Account" class="text-secondary text-decoration-none">
+                    Already have an account? <span class="text-primary">Log in</span>
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
