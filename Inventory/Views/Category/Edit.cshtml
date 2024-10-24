@@ -1,30 +1,4 @@
-﻿@* @model Inventory.Models.Category
-
-@{
-    ViewData["Title"] = "Edit Category";
-}
-
-<h3 class="text-center mt-2">Edit Category</h3>
-
-<form asp-action="Edit" method="post" class="form-horizontal">
-    <div class="form-group">
-        <label asp-for="CategoryName" class="control-label"></label>
-        <input asp-for="CategoryName" class="form-control" />
-        <span asp-validation-for="CategoryName" class="text-danger"></span>
-    </div>
-    <button type="submit" class="mb-2 btn btn-outline-success mt-3">Save Changes</button>
-    <a asp-action="Index" class="mb-2 btn btn-outline-danger mt-3">Cancel</a>
-</form>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-} *@
-
-
-@* ******************************** Enhanced View ************************************** *@
-
-
-@model Inventory.Models.Category
+﻿@model Inventory.Models.Category
 
 @{
     ViewData["Title"] = "Edit Category";
