@@ -1,4 +1,4 @@
-﻿@model Inventory.Models.Category
+﻿@* @model Inventory.Models.Category
 
 @{
     ViewData["Title"] = "Delete Category";
@@ -22,4 +22,49 @@
         <button type="submit" class="btn btn-outline-danger">Delete</button>
         <a asp-action="Index" class="btn btn-outline-primary">Cancel</a>
     </div>
-</form>
+</form> *@
+
+
+@* ******************************** Enhanced View ************************************** *@
+
+
+@model Inventory.Models.Category
+
+@{
+    ViewData["Title"] = "Delete Category";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7 col-sm-9">
+            <div class="card border-0 shadow-lg">
+                <div class="card-header text-center text-white" style="background: linear-gradient(to right, #4e54c8, #8b6cb0);">
+                    <h3 class="mb-0">Delete Category</h3>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-danger text-center">
+                        <strong>Warning!</strong> Are you sure you want to delete this category?
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">@Model.CategoryName</h5>
+                        </div>
+                    </div>
+
+                    <form asp-action="Delete" method="post" class="mt-4">
+                        <input type="hidden" asp-for="CategoryID" />
+                        <div class="d-flex justify-content-between mt-3">
+                            <button type="submit" class="btn btn-outline-danger">Delete</button>
+                            <a asp-action="Index" class="btn btn-outline-primary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

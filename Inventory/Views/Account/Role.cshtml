@@ -6,7 +6,7 @@
 
 <div class="d-flex justify-content-center align-items-center p-4">
     <div class="">
-        <h2 class="text-center mb-3">Create Roles</h2>
+        <h2 class="text-center mb-3">Create Role</h2>
         <form asp-action="SaveRole">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
@@ -36,20 +36,27 @@
 <div class="container my-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <h2 class="text-center mb-4">Create Role</h2>
-            <form asp-action="SaveRole">
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-                
-                <div class="form-floating mb-3">
-                    <input asp-for="RoleName" class="form-control" id="roleName" placeholder="Role name" required />
-                    <label for="roleName">Role Name</label>
-                    <span asp-validation-for="RoleName" class="text-danger"></span>
+            <div class="card border-0 shadow-lg">
+                <div class="card-header text-center" style="background: linear-gradient(to right, #4e54c8, #8b6cb0); color: white;">
+                    <h3 class="mb-0">Create Role</h3>
                 </div>
-                
-                <div class="d-flex justify-content-center">
-                    <input type="submit" value="Create" class="btn btn-outline-success btn-lg" />
+                <div class="card-body">
+                    <form asp-action="SaveRole">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="RoleName" class="form-control" id="roleName" placeholder="Role name" required />
+                            <label for="roleName">Role Name</label>
+                            <span asp-validation-for="RoleName" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-center">
+                            <input type="submit" value="Create" class="btn btn-outline-success" />
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
+
